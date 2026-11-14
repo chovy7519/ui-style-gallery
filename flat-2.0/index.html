@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Flat 2.0 · 扁平长阴影 — UI 风格样本</title>
+<style>
+  :root{
+    --ink:#22313F;
+    --ink-2:#3B4C5C;
+    --muted:#5D6D7E;
+    --bg:#EEF2F5;
+    --surface:#FFFFFF;
+    --line:#D3DDE5;
+    --primary:#1B6CA8;
+    --primary-dark:#14547F;
+    --red:#C0392B;
+    --teal:#117A65;
+    --amber:#B9770E;
+    --amber-ink:#7A4E00;
+    --sans:"Avenir Next","Segoe UI",-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --r:2px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;min-height:100vh;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .deco{position:fixed;z-index:0;pointer-events:none}
+  .deco-a{
+    width:360px;height:360px;right:-120px;top:-120px;border-radius:50%;
+    border:30px solid rgba(27,108,168,.09);
+  }
+  .deco-b{
+    width:180px;height:180px;left:-70px;top:56%;
+    background:rgba(192,57,43,.08);transform:rotate(18deg);
+  }
+  .deco-c{
+    width:0;height:0;right:8%;bottom:6%;
+    border-left:70px solid transparent;border-right:70px solid transparent;
+    border-bottom:120px solid rgba(17,122,101,.08);
+  }
+  :focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+  .page{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:clamp(22px,4vw,56px) clamp(16px,3vw,32px) 64px}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:clamp(4px,2vw,18px) 0 clamp(22px,4vw,36px)}
+  .eyebrow{
+    display:inline-block;
+    padding:6px 10px;
+    background:var(--ink);color:#fff;
+    font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    box-shadow:4px 4px 0 rgba(34,49,63,.18);
+  }
+  h1{
+    margin:18px 0 0;
+    font-size:clamp(38px,7vw,62px);
+    font-weight:800;line-height:1.04;letter-spacing:-.03em;
+  }
+  h1 .en{
+    display:block;margin-top:12px;
+    font-size:clamp(12px,1.5vw,14px);
+    font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--primary);
+  }
+  .lede{
+    max-width:74ch;margin:24px 0 0;
+    padding:20px 22px;
+    background:var(--surface);
+    border-left:8px solid var(--primary);
+    box-shadow:8px 8px 0 #D8E1E8;
+    font-size:clamp(14px,1.6vw,15.5px);
+    line-height:1.75;
+    color:var(--ink-2);
+  }
+  .lede strong{color:var(--ink);font-weight:800}
+
+  /* ---------- Tokens ---------- */
+  .tokens{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+  .token{
+    display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;
+    column-gap:10px;align-items:center;
+    padding:11px;background:var(--surface);
+    border-left:5px solid var(--primary);
+    box-shadow:5px 5px 0 rgba(34,49,63,.10);
+  }
+  .token:nth-child(2){border-left-color:var(--teal)}
+  .token:nth-child(3){border-left-color:var(--muted)}
+  .token:nth-child(4){border-left-color:var(--ink)}
+  .token:nth-child(5){border-left-color:var(--amber)}
+  .token:nth-child(6){border-left-color:var(--red)}
+  .token:nth-child(7){border-left-color:#7D8FA0}
+  .swatch,.glyph{
+    grid-row:1 / 3;width:34px;height:34px;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid rgba(34,49,63,.14);
+  }
+  .glyph{background:#F4F8FB;color:var(--primary);border-color:#D9E3EB}
+  .radii{gap:2px;align-items:flex-end;padding:6px}
+  .radii i{display:block;width:6px;height:20px;border:2px solid currentColor}
+  .elev{gap:2px;padding:6px}
+  .elev i{display:block;width:5px;height:20px;background:var(--primary)}
+  .elev i:nth-child(2){box-shadow:2px 2px 0 rgba(27,108,168,.4)}
+  .elev i:nth-child(3){box-shadow:4px 4px 0 rgba(27,108,168,.5)}
+  .type-glyph{font-size:18px;font-weight:800;letter-spacing:-.04em}
+  .t-name{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .t-value{font-size:12px;font-weight:800;white-space:normal;line-height:1.35;font-variant-numeric:tabular-nums}
+
+  /* ---------- Components ---------- */
+  .components{margin-top:clamp(26px,4vw,40px)}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .cell{
+    display:flex;flex-direction:column;gap:16px;
+    padding:clamp(18px,2.4vw,26px);
+    background:var(--surface);
+    box-shadow:8px 8px 0 #DCE4EA;
+  }
+  .cell h2{
+    margin:0;
+    display:inline-flex;align-items:center;align-self:flex-start;
+    padding-bottom:4px;
+    border-bottom:3px solid var(--ink);
+    font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  }
+  .demo{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .demo.col{flex-direction:column;align-items:flex-start;gap:15px}
+  .hint{margin:0;font-size:12px;line-height:1.7;color:var(--muted)}
+
+  /* buttons */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:44px;padding:0 20px;
+    border:0;border-radius:var(--r);
+    font-family:var(--sans);font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+    cursor:pointer;
+    transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease,filter .14s ease;
+  }
+  .btn-primary{
+    background:var(--primary);color:#fff;
+    box-shadow:2px 2px 0 var(--primary-dark),4px 4px 0 var(--primary-dark),6px 6px 0 var(--primary-dark),8px 8px 0 rgba(20,84,127,.45);
+  }
+  .btn-primary:hover{filter:brightness(1.04);transform:translate(-1px,-1px);box-shadow:2px 2px 0 var(--primary-dark),4px 4px 0 var(--primary-dark),6px 6px 0 var(--primary-dark),8px 8px 0 var(--primary-dark),10px 10px 0 rgba(20,84,127,.35)}
+  .btn-primary:active{transform:translate(5px,5px);filter:brightness(.96);box-shadow:2px 2px 0 var(--primary-dark)}
+  .btn-secondary{
+    background:var(--surface);color:var(--ink);
+    box-shadow:inset 0 0 0 2px var(--ink),4px 4px 0 #B9C6D0;
+  }
+  .btn-secondary:hover{background:#F3F8FC;transform:translate(-1px,-1px);box-shadow:inset 0 0 0 2px var(--ink),6px 6px 0 #B9C6D0}
+  .btn-secondary:active{transform:translate(2px,2px);box-shadow:inset 0 0 0 2px var(--ink),1px 1px 0 #B9C6D0}
+  .btn:disabled{
+    background:#DCE4EA;color:#7A8894;box-shadow:none;
+    cursor:not-allowed;transform:none;filter:none;
+  }
+  .icon-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:44px;height:44px;
+    border:2px solid var(--ink);border-radius:var(--r);
+    background:var(--surface);color:var(--ink);
+    box-shadow:4px 4px 0 #B9C6D0;
+    cursor:pointer;
+    transition:transform .14s ease,box-shadow .14s ease,background-color .14s ease;
+  }
+  .icon-btn:hover{background:#F3F8FC;transform:translate(-1px,-1px);box-shadow:6px 6px 0 #B9C6D0}
+  .icon-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #B9C6D0}
+  .icon-btn:disabled{background:#DCE4EA;color:#7A8894;border-color:#B9C6D0;box-shadow:none;cursor:not-allowed;transform:none}
+
+  /* field */
+  .field{display:flex;flex-direction:column;gap:5px;width:100%;max-width:340px}
+  .field label{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .field input{
+    width:100%;height:46px;padding:0 12px;
+    border:2px solid var(--ink);border-radius:var(--r);
+    background:var(--surface);
+    color:var(--ink);
+    font-family:var(--sans);font-size:14px;
+    transition:border-color .14s ease,box-shadow .14s ease,background-color .14s ease;
+  }
+  .field input::placeholder{color:#64727E}
+  .field input:hover{background:#F7FAFC}
+  .field input:focus{
+    outline:none;border-color:var(--primary);
+    box-shadow:0 0 0 4px rgba(27,108,168,.22);
+  }
+  .field input:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+  .field input:disabled{background:#EDF1F4;border-color:#B9C6D0;color:#7A8894;cursor:not-allowed}
+  .field small{font-size:11px;color:var(--muted)}
+
+  /* switch */
+  .switch{display:inline-flex;align-items:center;gap:12px;position:relative;font-size:14px;cursor:pointer}
+  .switch input{position:absolute;left:0;top:50%;transform:translateY(-50%);width:50px;height:28px;margin:0;opacity:0;z-index:1;cursor:pointer}
+  .track{
+    flex:0 0 auto;width:50px;height:28px;padding:3px;
+    display:flex;align-items:center;
+    background:#C3CFD9;border:2px solid var(--ink);border-radius:14px;
+    transition:background-color .16s ease;
+  }
+  .thumb{
+    width:18px;height:18px;border-radius:50%;
+    background:var(--surface);border:2px solid var(--ink);
+    transition:transform .18s ease,background-color .16s ease;
+  }
+  .switch input:checked + .track{background:var(--teal)}
+  .switch input:checked + .track .thumb{transform:translateX(22px)}
+  .switch:hover .track{filter:brightness(1.03)}
+  .switch input:active + .track .thumb{transform:scale(.9)}
+  .switch input:checked:active + .track .thumb{transform:translateX(22px) scale(.9)}
+  .switch input:focus-visible + .track{outline:3px solid var(--primary);outline-offset:3px}
+  .switch input:disabled + .track{opacity:.45;filter:none}
+  .switch:has(input:disabled){color:#7A8894;cursor:not-allowed}
+
+  /* segmented */
+  .seg{display:inline-flex;max-width:100%;box-shadow:4px 4px 0 #D8E1E8}
+  .seg label{position:relative;display:block;cursor:pointer}
+  .seg input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+  .seg label span{
+    display:flex;align-items:center;justify-content:center;
+    min-height:42px;padding:0 18px;
+    background:var(--surface);
+    border:2px solid var(--ink);
+    font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    transition:background-color .14s ease,color .14s ease;
+  }
+  .seg label + label span{border-left:0}
+  .seg label:hover span{background:#F3F8FC}
+  .seg label:active span{background:#E7F0F7}
+  .seg input:checked + span{background:var(--primary);color:#fff}
+  .seg input:focus-visible + span{outline:3px solid var(--primary);outline-offset:-4px}
+  .seg input:disabled + span{background:#E9EEF2;color:#8B98A4;cursor:not-allowed}
+  .seg label:has(input:disabled){cursor:not-allowed}
+  .seg label:has(input:disabled):hover span{background:#E9EEF2}
+
+  /* card */
+  .card{
+    padding:22px;
+    background:var(--surface);
+    border-top:6px solid var(--primary);
+    box-shadow:8px 8px 0 #D8E1E8;
+    transition:transform .16s ease,box-shadow .16s ease;
+  }
+  .card:hover{transform:translate(-2px,-2px);box-shadow:11px 11px 0 #D8E1E8}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+  .kicker{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .pill{
+    padding:3px 8px;
+    background:var(--ink);color:#fff;
+    font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  }
+  .card h3{margin:0 0 6px;font-size:21px;font-weight:800;letter-spacing:-.02em;line-height:1.25}
+  .card p{margin:0;font-size:13px;line-height:1.7;color:var(--muted)}
+  .metric{display:flex;align-items:baseline;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .metric strong{font-size:40px;font-weight:800;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+  .metric .unit{font-size:12px;font-weight:700;color:var(--muted)}
+  .metric .delta{
+    margin-left:auto;padding:3px 8px;
+    background:#DDF0EA;color:#0C5C4C;
+    font-size:11px;font-weight:800;letter-spacing:.04em;
+  }
+  .meter{height:10px;margin-top:16px;background:#E4EBF1;overflow:hidden}
+  .meter i{display:block;height:100%;background:var(--primary)}
+
+  /* list */
+  .list{list-style:none;margin:0;padding:0;border:2px solid var(--ink);box-shadow:5px 5px 0 #D8E1E8}
+  .list li + li{border-top:2px solid #E1E9EF}
+  .row{
+    display:flex;align-items:center;gap:12px;width:100%;
+    padding:11px 13px;
+    border:0;background:var(--surface);color:inherit;font:inherit;text-align:left;cursor:pointer;
+    transition:background-color .14s ease,padding-left .14s ease;
+  }
+  .row:hover{background:#F3F8FC;padding-left:16px}
+  .row:active{background:#E7F0F7}
+  .row:focus-visible{outline:3px solid var(--primary);outline-offset:-4px}
+  .row-num{
+    flex:0 0 auto;display:grid;place-items:center;
+    width:30px;height:30px;
+    background:#E4F0F8;color:var(--primary-dark);
+    font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;
+  }
+  .list li:nth-child(2) .row-num{background:#E0F0EC;color:#0C5C4C}
+  .list li:nth-child(3) .row-num{background:#FBEAE7;color:#8E2A20}
+  .row-main{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .row-main b{font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row-main small{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .badge{
+    flex:0 0 auto;padding:2px 7px;
+    background:#E4F0F8;color:var(--primary-dark);
+    font-size:10px;font-weight:800;letter-spacing:.05em;
+  }
+  .badge.ok{background:#E0F0EC;color:#0C5C4C}
+  .badge.warn{background:#FBEAE7;color:#8E2A20}
+
+  /* toast */
+  .toast{
+    display:flex;align-items:center;gap:12px;
+    padding:13px 13px 13px 16px;
+    background:var(--ink);color:#fff;
+    border-left:8px solid #F2B705;
+    box-shadow:7px 7px 0 rgba(34,49,63,.22);
+  }
+  .toast-icon{flex:0 0 auto;color:#FFC93C}
+  .toast-copy{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .toast-copy b{font-size:13px;font-weight:800;letter-spacing:.02em}
+  .toast-copy span{font-size:11.5px;color:rgba(255,255,255,.72)}
+  .toast-action{
+    border:0;background:transparent;color:#FFC93C;
+    padding:7px 8px;
+    font-family:var(--sans);font-size:11.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+    cursor:pointer;
+    transition:background-color .14s ease;
+  }
+  .toast-action:hover{background:rgba(255,201,60,.16)}
+  .toast-action:active{background:rgba(255,201,60,.28)}
+  .toast-close{
+    flex:0 0 auto;width:30px;height:30px;display:grid;place-items:center;
+    border:2px solid transparent;background:transparent;color:rgba(255,255,255,.7);
+    font-size:17px;line-height:1;cursor:pointer;
+    transition:background-color .14s ease,color .14s ease,border-color .14s ease;
+  }
+  .toast-close:hover{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3)}
+  .toast-close:active{background:rgba(255,255,255,.2)}
+  .toast-close:focus-visible{outline:2px solid #FFC93C;outline-offset:1px}
+
+  /* states */
+  .states{display:flex;flex-wrap:wrap;gap:12px}
+  .state{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--muted)}
+  .state i{width:30px;height:30px;background:var(--surface);border:2px solid var(--ink)}
+  .state:first-child i{box-shadow:4px 4px 0 rgba(27,108,168,.28)}
+  .state:nth-child(2) i{box-shadow:6px 6px 0 rgba(34,49,63,.24)}
+  .state:nth-child(3) i{background:#DCE4EA;border-color:#B9C6D0;box-shadow:none}
+
+  /* rules */
+  .rules{margin-top:clamp(32px,5vw,52px);padding-top:28px;border-top:3px solid var(--ink)}
+  .rules h2{margin:0 0 18px;font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+  .rules ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .rules li{
+    position:relative;
+    padding:18px 18px 18px 22px;
+    background:var(--surface);
+    border-left:6px solid var(--primary);
+    box-shadow:6px 6px 0 #D8E1E8;
+  }
+  .rules li:nth-child(2){border-left-color:var(--teal)}
+  .rules li:nth-child(3){border-left-color:var(--red)}
+  .rules li:nth-child(4){border-left-color:var(--amber)}
+  .rules li b{display:block;margin-bottom:4px;font-size:14px;font-weight:800}
+  .rules li p{margin:0;font-size:12.5px;line-height:1.7;color:var(--muted)}
+  .rules li code{
+    display:inline-block;margin-top:8px;padding:3px 6px;
+    background:#EDF3F7;color:var(--primary-dark);
+    font-size:11px;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  }
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:1fr}
+    .rules ol{grid-template-columns:1fr}
+    .metric strong{font-size:36px}
+    .deco{display:none}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<div class="deco deco-a" aria-hidden="true"></div>
+<div class="deco deco-b" aria-hidden="true"></div>
+<div class="deco deco-c" aria-hidden="true"></div>
+
+<main class="page">
+
+  <header class="hero">
+    <div class="eyebrow">UI Style 04 · System Sample</div>
+    <h1>扁平长阴影<span class="en">Flat 2.0 · Long Shadow &amp; Light Layers</span></h1>
+    <p class="lede"><strong>视觉机制：</strong>拒绝渐变、模糊和高光，用纯色块 + 45° 阶梯长阴影建立「纸片浮起」的轻层次；层级只有三档（0 / 4px / 8px 偏移），圆角压到 2px，靠粗字重和高饱和色块建立秩序，而不是靠材质。</p>
+  </header>
+
+  <section class="tokens" aria-label="设计 Token">
+    <div class="token">
+      <span class="swatch" style="background:#1B6CA8"></span>
+      <span class="t-name">主色 Primary</span>
+      <span class="t-value">#1B6CA8</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#117A65"></span>
+      <span class="t-name">辅色 Teal</span>
+      <span class="t-value">#117A65</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#FFFFFF"></span>
+      <span class="t-name">表面色 Surface</span>
+      <span class="t-value">#FFFFFF</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#22313F"></span>
+      <span class="t-name">文字色 Ink</span>
+      <span class="t-value">#22313F</span>
+    </div>
+    <div class="token">
+      <span class="glyph radii" aria-hidden="true">
+        <i style="border-radius:0"></i><i style="border-radius:1px"></i><i style="border-radius:2px"></i>
+      </span>
+      <span class="t-name">圆角尺度 Radius</span>
+      <span class="t-value">0 / 2px · 近直角</span>
+    </div>
+    <div class="token">
+      <span class="glyph elev" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="t-name">阴影层级 Elevation</span>
+      <span class="t-value">0 / 4px / 8px 硬偏移</span>
+    </div>
+    <div class="token">
+      <span class="glyph type-glyph" aria-hidden="true">Aa</span>
+      <span class="t-name">字体策略 Type</span>
+      <span class="t-value">Avenir / 系统 sans · 800</span>
+    </div>
+  </section>
+
+  <section class="components" aria-label="组件样例">
+    <div class="grid">
+
+      <article class="cell">
+        <h2>按钮 Buttons</h2>
+        <div class="demo">
+          <button class="btn btn-primary" type="button">开始探索</button>
+          <button class="btn btn-secondary" type="button">查看详情</button>
+          <button class="icon-btn" type="button" aria-label="添加">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square"/>
+            </svg>
+          </button>
+          <button class="btn btn-primary" type="button" disabled>不可用</button>
+        </div>
+        <p class="hint">长阴影由 4 层 2px 步进的实色阴影堆出，不是 blur；hover 上移 1px，active 下沉 5px 并收回阴影。</p>
+      </article>
+
+      <article class="cell">
+        <h2>文本输入 Input</h2>
+        <div class="field">
+          <label for="fl2-email">工作邮箱</label>
+          <input id="fl2-email" type="email" placeholder="name@company.com">
+          <small>用于接收每周数据摘要。</small>
+        </div>
+        <p class="hint">2px 墨色边框 + 0 圆角；聚焦时边框切到主色，并出现 4px 无模糊的实色外圈。</p>
+      </article>
+
+      <article class="cell">
+        <h2>开关 Switch</h2>
+        <div class="demo col">
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="track"><span class="thumb"></span></span>
+            <span>发布更新</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="track"><span class="thumb"></span></span>
+            <span>草稿模式</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" checked disabled>
+            <span class="track"><span class="thumb"></span></span>
+            <span>团队默认（已锁定）</span>
+          </label>
+        </div>
+        <p class="hint">轨道与滑块都带 2px 墨色描边，开启时换为 teal；关闭状态仍有清晰边界，不靠阴影。</p>
+      </article>
+
+      <article class="cell">
+        <h2>分段控件 Segments</h2>
+        <div class="seg" role="group" aria-label="视图">
+          <label><input type="radio" name="fl2-seg" checked><span>列表</span></label>
+          <label><input type="radio" name="fl2-seg"><span>网格</span></label>
+          <label><input type="radio" name="fl2-seg"><span>时间线</span></label>
+          <label><input type="radio" name="fl2-seg" disabled><span>地图</span></label>
+        </div>
+        <p class="hint">用 2px 描边把四段焊成一块，选中项直接反白为实色块，没有滑块动效，切换是瞬时的。</p>
+      </article>
+
+      <article class="cell">
+        <h2>卡片 Card</h2>
+        <article class="card">
+          <div class="card-head">
+            <span class="kicker">本月订单</span>
+            <span class="pill">实时</span>
+          </div>
+          <h3>履约率 96.4%</h3>
+          <p>共 12,480 笔订单，其中 412 笔延迟发货。华东仓贡献了最大增幅。</p>
+          <div class="metric">
+            <strong>12,480</strong><span class="unit">笔</span><span class="delta">+5.6%</span>
+          </div>
+          <div class="meter" aria-hidden="true"><i style="width:96%"></i></div>
+        </article>
+      </article>
+
+      <article class="cell">
+        <h2>列表 List</h2>
+        <ul class="list">
+          <li>
+            <button class="row" type="button">
+              <span class="row-num" aria-hidden="true">01</span>
+              <span class="row-main"><b>首页改版</b><small>已交付 · 设计</small></span>
+              <span class="badge">进行中</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="row-num" aria-hidden="true">02</span>
+              <span class="row-main"><b>支付流程</b><small>已交付 · 研发</small></span>
+              <span class="badge ok">已完成</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="row-num" aria-hidden="true">03</span>
+              <span class="row-main"><b>会员中心</b><small>待评审 · 产品</small></span>
+              <span class="badge warn">有风险</span>
+            </button>
+          </li>
+        </ul>
+      </article>
+
+      <article class="cell">
+        <h2>提示条 Alert</h2>
+        <div class="toast" role="status">
+          <svg class="toast-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M12 3l9 16H3L12 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M12 9v5M12 16.6v.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="toast-copy"><b>配额即将用尽</b><span>本月 API 调用剩余 8%，建议提前扩容。</span></div>
+          <button class="toast-action" type="button">扩容</button>
+          <button class="toast-close" type="button" aria-label="关闭提示">×</button>
+        </div>
+        <p class="hint">深色块 + 8px 琥珀色左条，是最重的层级；它不使用长阴影，避免和可点击卡片混淆。</p>
+      </article>
+
+      <article class="cell">
+        <h2>层级与状态 Layers</h2>
+        <div class="states">
+          <div class="state"><i aria-hidden="true"></i><span>基础：无阴影</span></div>
+          <div class="state"><i aria-hidden="true"></i><span>浮起：4px 硬阴影</span></div>
+          <div class="state"><i aria-hidden="true"></i><span>禁用：去阴影 + 降饱和</span></div>
+        </div>
+        <p class="hint">hover 只允许「上移 1px」或「提亮 9%」两种反馈；active 统一下沉，保持物理直觉。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <footer class="rules">
+    <h2>可直接复用的 4 条规则</h2>
+    <ol>
+      <li>
+        <b>长阴影用步进实色，不用模糊</b>
+        <p>4 层 2px 步进的同色阴影即可形成 45° 长尾，颜色取主色的深色版本，保持扁平。</p>
+        <code>2px 2px, 4px 4px, 6px 6px, 8px 8px</code>
+      </li>
+      <li>
+        <b>只有三档层级</b>
+        <p>页面块 0 阴影，可点击卡片 4–8px 偏移，浮层最深；不要出现模糊阴影或多层黑色。</p>
+        <code>box-shadow:8px 8px 0 #D8E1E8</code>
+      </li>
+      <li>
+        <b>2px 描边替代材质</b>
+        <p>按钮、输入框、开关都用 2px 墨色边界定义形状，保证在浅灰背景上仍然清晰。</p>
+        <code>border:2px solid #22313F</code>
+      </li>
+      <li>
+        <b>粗字重 + 大字距</b>
+        <p>标签统一 800 字重、0.08–0.12em 字距、全大写，小字号也能承担结构信息。</p>
+        <code>font-weight:800; letter-spacing:.1em</code>
+      </li>
+    </ol>
+  </footer>
+
+</main>
+</body>
+</html>

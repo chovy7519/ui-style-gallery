@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>像素 8-bit · Pixel Retro — UI 风格样本</title>
+<style>
+  :root{
+    --c-primary:#ff004d;
+    --c-secondary:#29adff;
+    --c-accent:#ffec27;
+    --c-green:#00e436;
+    --c-bg:#0b0b18;
+    --c-panel:#1a1c33;
+    --c-text:#fff1e8;
+    --c-muted:#a9a5c6;
+    --radius:0px;
+    --font:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New","PingFang SC",monospace;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+
+  body{
+    min-height:100vh;
+    padding:clamp(18px,4vw,52px) clamp(14px,3.4vw,32px) 70px;
+    color:var(--c-text);
+    font-family:var(--font);
+    font-size:14px;
+    line-height:1.75;
+    letter-spacing:.04em;
+    background:
+      repeating-conic-gradient(rgba(255,255,255,.022) 0% 25%, transparent 0% 50%) 0 0/32px 32px,
+      linear-gradient(180deg,#12122a,#0b0b18 60%);
+    background-attachment:fixed;
+    overflow-x:hidden;
+    -webkit-font-smoothing:none;
+  }
+
+  .page{
+    max-width:1120px;
+    margin:0 auto;
+  }
+
+  /* ============ 顶部 ============ */
+  .hero{
+    position:relative;
+    padding:clamp(20px,3.4vw,34px) clamp(18px,3.4vw,30px);
+    margin-bottom:22px;
+    background:linear-gradient(180deg,#23264a,#171a30);
+    border:3px solid #000;
+    box-shadow:
+      0 0 0 3px #5a5fa8,
+      inset 3px 3px 0 rgba(255,255,255,.16),
+      inset -3px -3px 0 rgba(0,0,0,.55),
+      0 10px 0 rgba(0,0,0,.45);
+    overflow:hidden;
+  }
+
+  /* 抖动网点条 */
+  .hero::before{
+    content:"";
+    position:absolute;
+    left:0;right:0;top:0;
+    height:10px;
+    background:
+      repeating-conic-gradient(var(--c-accent) 0% 25%, #000 0% 50%) 0 0/10px 10px;
+    opacity:.85;
+    border-bottom:3px solid #000;
+  }
+
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-30px;bottom:-40px;
+    width:170px;height:170px;
+    background:
+      repeating-conic-gradient(rgba(255,0,77,.22) 0% 25%, transparent 0% 50%) 0 0/14px 14px;
+    transform:rotate(0deg);
+    pointer-events:none;
+  }
+
+  .hero__eyebrow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:8px 0 14px;
+  }
+
+  .chip{
+    display:inline-block;
+    padding:2px 8px;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:#0b0b18;
+    background:var(--c-accent);
+    border:2px solid #000;
+    box-shadow:2px 2px 0 #000;
+  }
+
+  .chip--blue{background:var(--c-secondary);color:#04121c}
+  .chip--ghost{background:#0b0b18;color:var(--c-text);border-color:#5a5fa8;box-shadow:2px 2px 0 #000}
+
+  .hero__title{
+    position:relative;
+    margin:0 0 12px;
+    font-family:var(--font);
+    font-size:clamp(1.75rem,5vw,3rem);
+    font-weight:700;
+    line-height:1.2;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--c-text);
+    text-shadow:3px 3px 0 #000, 6px 6px 0 rgba(255,0,77,.55);
+  }
+
+  .hero__title em{
+    display:block;
+    margin-top:10px;
+    font-style:normal;
+    font-size:.4em;
+    letter-spacing:.26em;
+    color:var(--c-secondary);
+    text-shadow:2px 2px 0 #000;
+  }
+
+  .hero__lede{
+    position:relative;
+    max-width:66ch;
+    margin:0;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:14px;
+    letter-spacing:0;
+    line-height:1.75;
+    color:#e8e3f7;
+  }
+
+  .hero__lede b{color:var(--c-accent);font-weight:700}
+
+  /* ============ token 条 ============ */
+  .tokens{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+    gap:4px;
+    margin-bottom:22px;
+  }
+
+  .token{
+    padding:9px 11px;
+    background:#15172b;
+    border:3px solid #000;
+    box-shadow:inset 2px 2px 0 rgba(255,255,255,.1), inset -2px -2px 0 rgba(0,0,0,.5);
+  }
+
+  .token__key{
+    display:block;
+    margin-bottom:4px;
+    font-size:9.5px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--c-muted);
+  }
+
+  .token__val{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.02em;
+    color:#fff;
+  }
+
+  .swatch{
+    width:14px;height:14px;flex:none;
+    border:2px solid #000;
+    box-shadow:0 0 0 1px #5a5fa8;
+  }
+
+  code{
+    font-family:var(--font);
+    font-size:11px;
+    color:#ffe9a8;
+  }
+
+  /* ============ 组件网格 ============ */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+  }
+
+  .panel{
+    padding:16px 16px 18px;
+    background:linear-gradient(180deg,#1e2140,#181a2f);
+    border:3px solid #000;
+    box-shadow:
+      0 0 0 3px #4a4f8f,
+      inset 2px 2px 0 rgba(255,255,255,.13),
+      inset -2px -2px 0 rgba(0,0,0,.5),
+      6px 6px 0 rgba(0,0,0,.5);
+  }
+
+  .panel--wide{grid-column:1 / -1}
+
+  .panel__head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+    padding-bottom:9px;
+    border-bottom:3px solid #000;
+    box-shadow:0 3px 0 rgba(255,255,255,.08);
+  }
+
+  .panel__head h2{
+    margin:0;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+
+  .panel__head span{
+    font-size:9px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--c-secondary);
+  }
+
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+  .hint{
+    margin:13px 0 0;
+    font-size:10.5px;
+    line-height:1.7;
+    color:var(--c-muted);
+    letter-spacing:.02em;
+  }
+
+  /* —— 按钮：像素硬投影 —— */
+  .btn{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:9px 16px;
+    font-family:var(--font);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:#0b0b18;
+    background:var(--c-accent);
+    border:3px solid #000;
+    border-radius:0;
+    cursor:pointer;
+    box-shadow:4px 4px 0 #000, inset 0 3px 0 rgba(255,255,255,.45), inset 0 -3px 0 rgba(0,0,0,.22);
+    transition:transform .06s steps(1), box-shadow .06s steps(1), background .06s steps(1);
+  }
+
+  .btn:hover{
+    background:#fff27a;
+    transform:translate(-1px,-1px);
+    box-shadow:5px 5px 0 #000, inset 0 3px 0 rgba(255,255,255,.5), inset 0 -3px 0 rgba(0,0,0,.2);
+  }
+
+  .btn:active{
+    transform:translate(3px,3px);
+    box-shadow:1px 1px 0 #000, inset 0 3px 0 rgba(0,0,0,.25);
+    background:#d9c900;
+  }
+
+  .btn:focus-visible{
+    outline:3px solid var(--c-secondary);
+    outline-offset:3px;
+  }
+
+  .btn[disabled]{
+    color:#7b7fa8;
+    background:
+      repeating-linear-gradient(135deg, #2c2f52 0 4px, #23264a 4px 8px);
+    border-color:#000;
+    box-shadow:3px 3px 0 #000;
+    transform:none;
+    cursor:not-allowed;
+    text-decoration:line-through;
+  }
+
+  .btn--primary{
+    background:var(--c-primary);
+    color:#fff;
+    text-shadow:2px 2px 0 #6b0022;
+    box-shadow:4px 4px 0 #000, inset 0 3px 0 rgba(255,255,255,.32), inset 0 -3px 0 rgba(0,0,0,.3);
+  }
+
+  .btn--primary:hover{
+    background:#ff2a68;
+    box-shadow:5px 5px 0 #000, inset 0 3px 0 rgba(255,255,255,.4), inset 0 -3px 0 rgba(0,0,0,.28);
+  }
+
+  .btn--primary:active{background:#c7003c}
+
+  .btn--secondary{
+    background:var(--c-secondary);
+    color:#04121c;
+    box-shadow:4px 4px 0 #000, inset 0 3px 0 rgba(255,255,255,.45), inset 0 -3px 0 rgba(0,0,0,.25);
+  }
+
+  .btn--secondary:hover{background:#63c6ff}
+
+  .btn--icon svg{width:14px;height:14px;flex:none}
+
+  /* —— 输入框 —— */
+  .field{display:block;margin-bottom:13px}
+  .field:last-of-type{margin-bottom:0}
+
+  .field__label{
+    display:block;
+    margin-bottom:5px;
+    font-size:9.5px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--c-muted);
+  }
+
+  .input{
+    width:100%;
+    padding:9px 11px;
+    font-family:var(--font);
+    font-size:12.5px;
+    letter-spacing:.06em;
+    color:var(--c-text);
+    background:#10111f;
+    border:3px solid #000;
+    border-radius:0;
+    box-shadow:0 0 0 2px #454a86, inset 3px 3px 0 rgba(0,0,0,.6);
+    transition:box-shadow .1s steps(1), background .1s steps(1);
+  }
+
+  .input::placeholder{color:#767aa3}
+
+  .input:hover{box-shadow:0 0 0 2px var(--c-secondary), inset 3px 3px 0 rgba(0,0,0,.6)}
+
+  .input:focus{
+    outline:3px solid var(--c-secondary);
+    outline-offset:3px;
+    background:#0a0b16;
+    box-shadow:0 0 0 2px var(--c-secondary), inset 3px 3px 0 rgba(0,0,0,.6);
+  }
+
+  .input[disabled]{
+    color:#7b7fa8;
+    background:
+      repeating-linear-gradient(135deg, #191b30 0 4px, #15172a 4px 8px);
+    box-shadow:0 0 0 2px #3a3e6b;
+    cursor:not-allowed;
+  }
+
+  /* —— 开关 —— */
+  .switch{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    user-select:none;
+  }
+
+  .switch input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  .switch__track{
+    position:relative;
+    width:60px;height:28px;
+    flex:none;
+    background:#10111f;
+    border:3px solid #000;
+    box-shadow:0 0 0 2px #454a86, inset 3px 3px 0 rgba(0,0,0,.55);
+    transition:background .1s steps(1), box-shadow .1s steps(1);
+  }
+
+  .switch__knob{
+    position:absolute;
+    top:2px;left:2px;
+    width:18px;height:18px;
+    background:#8b8fbd;
+    box-shadow:inset 2px 2px 0 rgba(255,255,255,.5), inset -2px -2px 0 rgba(0,0,0,.4);
+    transition:transform .1s steps(1), background .1s steps(1);
+  }
+
+  .switch input:checked + .switch__track{
+    background:#0d2b1d;
+    box-shadow:0 0 0 2px var(--c-green), inset 3px 3px 0 rgba(0,0,0,.55), 0 0 16px rgba(0,228,54,.3);
+  }
+
+  .switch input:checked + .switch__track .switch__knob{
+    transform:translateX(30px);
+    background:var(--c-green);
+    box-shadow:inset 2px 2px 0 rgba(255,255,255,.6), inset -2px -2px 0 rgba(0,0,0,.35);
+  }
+
+  .switch input:focus-visible + .switch__track{
+    outline:3px solid var(--c-secondary);
+    outline-offset:3px;
+  }
+
+  .switch input:disabled + .switch__track{
+    opacity:.4;
+    cursor:not-allowed;
+  }
+
+  .switch__text{font-size:11.5px;letter-spacing:.06em}
+  .switch input:disabled ~ .switch__text{color:#767aa3}
+
+  /* —— 分段控件 —— */
+  .seg{
+    display:inline-flex;
+    border:3px solid #000;
+    box-shadow:4px 4px 0 #000;
+    background:#000;
+  }
+
+  .seg input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  .seg label{
+    padding:6px 14px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.1em;
+    color:var(--c-muted);
+    background:#1e2140;
+    border-right:3px solid #000;
+    cursor:pointer;
+    transition:background .08s steps(1), color .08s steps(1);
+  }
+
+  .seg label:last-of-type{border-right:0}
+
+  .seg label:hover{background:#2b2f57;color:#fff}
+
+  .seg input:checked + label{
+    background:var(--c-accent);
+    color:#0b0b18;
+    box-shadow:inset 0 3px 0 rgba(255,255,255,.45), inset 0 -3px 0 rgba(0,0,0,.25);
+  }
+
+  .seg input:disabled + label{
+    color:#5f6389;
+    background:repeating-linear-gradient(135deg, #23264a 0 4px, #1e2140 4px 8px);
+    text-decoration:line-through;
+    cursor:not-allowed;
+  }
+
+  .seg input:focus-visible + label{
+    outline:3px solid var(--c-secondary);
+    outline-offset:-6px;
+  }
+
+  /* —— 卡片 —— */
+  .card{
+    padding:13px 14px 15px;
+    background:#121424;
+    border:3px solid #000;
+    box-shadow:inset 2px 2px 0 rgba(255,255,255,.1), inset -2px -2px 0 rgba(0,0,0,.5);
+  }
+
+  .card__kicker{
+    display:flex;
+    justify-content:space-between;
+    gap:8px;
+    margin-bottom:8px;
+    font-size:9px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--c-muted);
+  }
+
+  .card__kicker b{color:var(--c-green);font-weight:700}
+
+  .card h3{
+    margin:0 0 6px;
+    font-size:14px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:#fff;
+  }
+
+  .card p{
+    margin:0;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:12.5px;
+    letter-spacing:0;
+    line-height:1.72;
+    color:#cfcbe6;
+  }
+
+  .card__metric{
+    display:flex;
+    align-items:baseline;
+    gap:9px;
+    margin-top:12px;
+    padding-top:10px;
+    border-top:3px solid #000;
+    box-shadow:0 -3px 0 rgba(255,255,255,.06);
+  }
+
+  .card__metric strong{
+    font-size:30px;
+    line-height:1;
+    font-weight:700;
+    letter-spacing:.04em;
+    color:var(--c-accent);
+    text-shadow:3px 3px 0 #000;
+  }
+
+  .card__metric span{
+    font-size:9px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--c-muted);
+  }
+
+  /* 分段血条 */
+  .meter{
+    display:flex;
+    gap:3px;
+    margin-top:9px;
+  }
+
+  .meter i{
+    flex:1;
+    height:9px;
+    background:#2b2f57;
+    border:2px solid #000;
+  }
+
+  .meter i:nth-child(-n+7){background:var(--c-green)}
+
+  /* —— 列表 —— */
+  .list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+
+  .list a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 10px;
+    text-decoration:none;
+    color:var(--c-text);
+    background:#121424;
+    border:3px solid #000;
+    box-shadow:3px 3px 0 #000, inset 2px 2px 0 rgba(255,255,255,.08);
+    transition:background .08s steps(1), transform .08s steps(1), box-shadow .08s steps(1);
+  }
+
+  .list a:hover{
+    background:#242850;
+    transform:translate(-1px,-1px);
+    box-shadow:4px 4px 0 #000, inset 2px 2px 0 rgba(255,255,255,.14);
+  }
+
+  .list a:active{
+    transform:translate(2px,2px);
+    box-shadow:1px 1px 0 #000;
+  }
+
+  .list a:focus-visible{
+    outline:3px solid var(--c-secondary);
+    outline-offset:3px;
+  }
+
+  .pix{
+    width:10px;height:10px;
+    flex:none;
+    background:var(--c-primary);
+    box-shadow:
+      10px 0 0 var(--c-primary), 0 10px 0 var(--c-primary),
+      -10px 0 0 var(--c-primary), 0 -10px 0 var(--c-primary),
+      6px 6px 0 var(--c-primary), -6px 6px 0 var(--c-primary),
+      6px -6px 0 var(--c-primary), -6px -6px 0 var(--c-primary);
+    margin:0 14px 0 12px;
+    transform:scale(.62);
+  }
+
+  .pix--blue{background:var(--c-secondary);box-shadow:10px 0 0 var(--c-secondary), 0 10px 0 var(--c-secondary), -10px 0 0 var(--c-secondary), 0 -10px 0 var(--c-secondary), 6px 6px 0 var(--c-secondary), -6px 6px 0 var(--c-secondary), 6px -6px 0 var(--c-secondary), -6px -6px 0 var(--c-secondary)}
+  .pix--green{background:var(--c-green);box-shadow:10px 0 0 var(--c-green), 0 10px 0 var(--c-green), -10px 0 0 var(--c-green), 0 -10px 0 var(--c-green), 6px 6px 0 var(--c-green), -6px 6px 0 var(--c-green), 6px -6px 0 var(--c-green), -6px -6px 0 var(--c-green)}
+
+  .list__text{flex:1;min-width:0}
+  .list__title{display:block;font-size:12px;letter-spacing:.06em}
+  .list__meta{display:block;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--c-muted)}
+
+  .badge{
+    flex:none;
+    padding:1px 6px;
+    font-size:9px;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:#0b0b18;
+    background:var(--c-accent);
+    border:2px solid #000;
+    box-shadow:2px 2px 0 #000;
+  }
+
+  .badge--red{background:var(--c-primary);color:#fff}
+  .badge--blue{background:var(--c-secondary);color:#04121c}
+
+  /* —— 提示条 —— */
+  .alert{
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+    padding:10px 12px;
+    margin-bottom:12px;
+    background:var(--c-accent);
+    border:3px solid #000;
+    box-shadow:5px 5px 0 #000;
+    color:#12131f;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:12.5px;
+    letter-spacing:0;
+  }
+
+  .alert__icon{
+    flex:none;
+    display:grid;
+    place-items:center;
+    width:20px;height:20px;
+    font-family:var(--font);
+    font-size:13px;
+    font-weight:700;
+    color:var(--c-accent);
+    background:#000;
+  }
+
+  .alert p{margin:0;line-height:1.65}
+  .alert b{font-weight:700;background:#000;color:var(--c-accent);padding:0 3px}
+  .alert code{color:#12131f;background:rgba(0,0,0,.09);padding:0 3px}
+
+  .toast{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 12px;
+    background:#0f2418;
+    border:3px solid var(--c-green);
+    box-shadow:0 0 0 3px #000, 5px 5px 0 #000;
+    font-size:11.5px;
+    letter-spacing:.08em;
+    color:#c9ffd6;
+  }
+
+  .toast span{
+    font-size:9px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:#7fd897;
+  }
+
+  /* ============ 底部 ============ */
+  .notes{
+    margin-top:22px;
+    padding:18px clamp(16px,3vw,24px);
+    background:#15172b;
+    border:3px solid #000;
+    box-shadow:0 0 0 3px #4a4f8f, 6px 6px 0 rgba(0,0,0,.5);
+  }
+
+  .notes h2{
+    margin:0 0 12px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.26em;
+    text-transform:uppercase;
+    color:var(--c-accent);
+    text-shadow:2px 2px 0 #000;
+  }
+
+  .notes ol{
+    margin:0;
+    padding-left:18px;
+    display:grid;
+    gap:9px;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:12.5px;
+    letter-spacing:0;
+    line-height:1.7;
+    color:#d3cfe8;
+  }
+
+  .notes li::marker{color:var(--c-primary);font-family:var(--font);font-size:11px}
+  .notes b{color:#fff}
+
+  code.k{
+    font-family:var(--font);
+    font-size:11px;
+    padding:1px 4px;
+    color:#ffe9a8;
+    background:#0b0b18;
+    border:1px solid #4a4f8f;
+  }
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:minmax(0,1fr)}
+    .panel--wide{grid-column:auto}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="hero">
+    <div class="hero__eyebrow">
+      <span class="chip">STYLE 04</span>
+      <span class="chip chip--blue">PIXEL / 8-BIT</span>
+      <span class="chip chip--ghost">NO ANTI-ALIASING</span>
+    </div>
+    <h1 class="hero__title">像素 8-bit<em>Pixel Retro</em></h1>
+    <p class="hero__lede">
+      视觉机制：所有边缘都是<b>硬边</b>，所有阴影都是<b>无模糊的阶梯块</b>。用等宽字体、字距和 2–4px 的
+      多层描边，在没有像素字体文件的前提下模拟出低分辨率网格的秩序感。
+    </p>
+  </header>
+
+  <section class="tokens" aria-label="设计令牌">
+    <div class="token"><span class="token__key">主色 / Primary</span><span class="token__val"><i class="swatch" style="background:#ff004d"></i>#FF004D</span></div>
+    <div class="token"><span class="token__key">辅色 / Accent</span><span class="token__val"><i class="swatch" style="background:#29adff"></i>#29ADFF</span></div>
+    <div class="token"><span class="token__key">背景 / Base</span><span class="token__val"><i class="swatch" style="background:#0b0b18"></i>#0B0B18</span></div>
+    <div class="token"><span class="token__key">文字 / Text</span><span class="token__val"><i class="swatch" style="background:#fff1e8"></i>#FFF1E8</span></div>
+    <div class="token"><span class="token__key">圆角 / Radius</span><span class="token__val">0px 全直角</span></div>
+    <div class="token"><span class="token__key">描边与投影</span><span class="token__val">3px 实边 + 4px 硬投影</span></div>
+    <div class="token"><span class="token__key">字体策略</span><span class="token__val">mono / 字距 .12em</span></div>
+  </section>
+
+  <section class="grid">
+
+    <section class="panel">
+      <div class="panel__head"><h2>按钮</h2><span>Button</span></div>
+      <div class="row">
+        <button class="btn btn--primary" type="button">主按钮</button>
+        <button class="btn btn--secondary" type="button">次按钮</button>
+        <button class="btn btn--icon" type="button">
+          <svg viewBox="0 0 16 16" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true"><rect x="6" y="1" width="4" height="2"/><rect x="6" y="3" width="4" height="2"/><rect x="6" y="5" width="4" height="2"/><rect x="6" y="7" width="4" height="2"/><rect x="2" y="9" width="12" height="2"/><rect x="4" y="11" width="8" height="2"/><rect x="6" y="13" width="4" height="2"/></svg>
+          导出
+        </button>
+        <button class="btn" type="button" disabled>禁用态</button>
+      </div>
+      <p class="hint">hover 抬起 1px、投影变 5px；active 压入 3px、投影收成 1px</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>输入框</h2><span>Input</span></div>
+      <label class="field">
+        <span class="field__label">Player_Name</span>
+        <input class="input" type="text" value="PLAYER_01" autocomplete="off">
+      </label>
+      <label class="field">
+        <span class="field__label">Disabled</span>
+        <input class="input" type="text" value="GAME OVER" disabled>
+      </label>
+      <p class="hint">3px 边框 + 外圈 2px 描边 + 内嵌暗边，模拟 NES 输入框</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>开关</h2><span>Switch</span></div>
+      <div class="row" style="gap:22px">
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="switch__track" aria-hidden="true"><span class="switch__knob"></span></span>
+          <span class="switch__text">音效开启</span>
+        </label>
+        <label class="switch">
+          <input type="checkbox" disabled>
+          <span class="switch__track" aria-hidden="true"><span class="switch__knob"></span></span>
+          <span class="switch__text">禁用开关</span>
+        </label>
+      </div>
+      <p class="hint">滑块用 <code class="k">steps(1)</code> 过渡，瞬间跳格不插值</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>分段控件</h2><span>Segmented</span></div>
+      <div class="seg" role="group" aria-label="视图密度">
+        <input type="radio" name="density" id="d1" checked><label for="d1">紧凑</label>
+        <input type="radio" name="density" id="d2"><label for="d2">标准</label>
+        <input type="radio" name="density" id="d3"><label for="d3">宽松</label>
+        <input type="radio" name="density" id="d4" disabled><label for="d4">锁定</label>
+      </div>
+      <p class="hint">选中项变成黄色实体按键，带顶部高光与底部暗边</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>卡片</h2><span>Card</span></div>
+      <article class="card">
+        <div class="card__kicker"><span>STAGE 04</span><b>1UP</b></div>
+        <h3>午夜关卡</h3>
+        <p>用硬边、阶梯阴影和抖动网点搭建一个 8-bit 界面。<br>文字保持系统字体，只借用等宽的骨骼。</p>
+        <div class="card__metric"><strong>98.6%</strong><span>Signal</span></div>
+        <div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>列表</h2><span>List</span></div>
+      <ul class="list">
+        <li><a href="#">
+          <i class="pix" aria-hidden="true"></i>
+          <span class="list__text"><span class="list__title">阶梯硬投影</span><span class="list__meta">4px offset</span></span>
+          <span class="badge badge--red">active</span>
+        </a></li>
+        <li><a href="#">
+          <i class="pix pix--blue" aria-hidden="true"></i>
+          <span class="list__text"><span class="list__title">抖动网点</span><span class="list__meta">conic-gradient</span></span>
+          <span class="badge badge--blue">css</span>
+        </a></li>
+        <li><a href="#">
+          <i class="pix pix--green" aria-hidden="true"></i>
+          <span class="list__text"><span class="list__title">像素图标</span><span class="list__meta">inline svg rect</span></span>
+          <span class="badge">8-bit</span>
+        </a></li>
+      </ul>
+    </section>
+
+    <section class="panel panel--wide">
+      <div class="panel__head"><h2>提示</h2><span>Alert / Toast</span></div>
+      <div class="alert">
+        <span class="alert__icon" aria-hidden="true">!</span>
+        <p><b>PRESS START：</b>本页零外链，像素图标由内联 SVG 矩形拼成，网点由 <code style="font-family:var(--font)">repeating-conic-gradient</code> 生成。</p>
+      </div>
+      <div class="toast">
+        GAME SAVED — SLOT 01
+        <span>12:04 · Offline</span>
+      </div>
+    </section>
+
+  </section>
+
+  <footer class="notes">
+    <h2>关键 CSS 手法</h2>
+    <ol>
+      <li><b>阶梯阴影</b>：<code class="k">box-shadow: 4px 4px 0 #000</code> 不写模糊，配合 <code class="k">steps(1)</code> 过渡，位移是"跳格"而不是滑动。</li>
+      <li><b>伪像素字体</b>：<code class="k">ui-monospace</code> / Courier 加 <code class="k">letter-spacing:.12em</code> 与 <code class="k">text-transform:uppercase</code>，再叠 <code class="k">3px 3px 0 #000</code> 硬阴影，接近点阵字重。</li>
+      <li><b>抖动网点</b>：<code class="k">repeating-conic-gradient(#ffec27 0 25%, #000 0 50%)</code> 配 <code class="k">background-size:10px 10px</code>，得到经典 2×2 棋盘。</li>
+      <li><b>NES 边框</b>：内层 <code class="k">inset 2px 2px 0 light</code> + <code class="k">inset -2px -2px 0 dark</code>，外层再补 <code class="k">0 0 0 3px</code> 描边，三层就够立体。</li>
+    </ol>
+  </footer>
+
+</main>
+</body>
+</html>

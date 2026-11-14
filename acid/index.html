@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>酸性设计 · Acid Graphic — UI 风格样本</title>
+<style>
+  :root{
+    --c-primary:#e4ff1a;
+    --c-secondary:#ff2d55;
+    --c-blue:#2b3cff;
+    --c-bg:#e4ff1a;
+    --c-ink:#0a0a0a;
+    --c-paper:#fbfaf3;
+    --c-muted:#5f5e56;
+    --radius:0px;
+    --font:"Arial Black","Helvetica Neue",Impact,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+
+  body{
+    min-height:100vh;
+    padding:clamp(18px,4vw,52px) clamp(14px,4vw,32px) 70px;
+    color:var(--c-ink);
+    font-family:var(--font);
+    font-size:15px;
+    line-height:1.6;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.07) 0 1px, transparent 1px 32px),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.07) 0 1px, transparent 1px 32px),
+      var(--c-bg);
+    overflow-x:hidden;
+  }
+
+  .page{
+    max-width:1140px;
+    margin:0 auto;
+  }
+
+  /* ============ 顶部 ============ */
+  .hero{
+    position:relative;
+    padding:clamp(20px,3vw,34px) clamp(18px,3vw,30px);
+    margin-bottom:26px;
+    background:var(--c-paper);
+    border:3px solid var(--c-ink);
+    box-shadow:10px 10px 0 var(--c-ink);
+    transform:rotate(-.35deg);
+  }
+
+  .hero::after{
+    content:"ANTI-DESIGN";
+    position:absolute;
+    right:-14px;
+    top:-18px;
+    padding:3px 12px;
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.24em;
+    color:var(--c-bg);
+    background:var(--c-ink);
+    transform:rotate(2.5deg);
+  }
+
+  .hero__eyebrow{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:14px;
+  }
+
+  .chip{
+    display:inline-block;
+    padding:3px 10px;
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--c-ink);
+    background:var(--c-bg);
+    border:2px solid var(--c-ink);
+  }
+
+  .chip--outline{
+    background:transparent;
+    border-style:dashed;
+  }
+
+  .hero__title{
+    margin:0 0 12px;
+    font-family:var(--font);
+    font-size:clamp(2.3rem,7vw,4.4rem);
+    line-height:.96;
+    letter-spacing:-.03em;
+    text-transform:uppercase;
+  }
+
+  .hero__title em{
+    display:inline-block;
+    margin-left:.1em;
+    font-style:normal;
+    color:var(--c-secondary);
+    -webkit-text-stroke:2px var(--c-ink);
+    text-shadow:4px 4px 0 var(--c-ink);
+    transform:rotate(-1.2deg);
+  }
+
+  .hero__lede{
+    max-width:64ch;
+    margin:0;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:14.5px;
+    font-weight:500;
+    line-height:1.7;
+  }
+
+  .hero__lede b{
+    background:var(--c-ink);
+    color:var(--c-bg);
+    padding:0 4px;
+    font-weight:800;
+  }
+
+  /* ============ token 条 ============ */
+  .tokens{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(168px,1fr));
+    gap:0;
+    margin-bottom:30px;
+    border:3px solid var(--c-ink);
+    background:var(--c-paper);
+    box-shadow:8px 8px 0 var(--c-ink);
+    transform:rotate(.2deg);
+  }
+
+  .token{
+    padding:10px 12px;
+    border-right:2px solid var(--c-ink);
+    border-bottom:2px solid var(--c-ink);
+  }
+
+  .token__key{
+    display:block;
+    margin-bottom:3px;
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--c-muted);
+  }
+
+  .token__val{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:-.01em;
+  }
+
+  .swatch{
+    width:15px;height:15px;flex:none;
+    border:2px solid var(--c-ink);
+  }
+
+  code{
+    font-family:var(--mono);
+    font-size:11.5px;
+    background:var(--c-bg);
+    padding:0 3px;
+    border:1px solid var(--c-ink);
+  }
+
+  /* ============ 组件网格 ============ */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:22px;
+  }
+
+  .panel{
+    position:relative;
+    padding:18px 18px 20px;
+    background:var(--c-paper);
+    border:3px solid var(--c-ink);
+    box-shadow:7px 7px 0 var(--c-ink);
+  }
+
+  .panel:nth-child(odd){transform:rotate(-.3deg)}
+  .panel:nth-child(even){transform:rotate(.28deg)}
+  .panel--wide{grid-column:1 / -1;transform:none !important}
+
+  .panel__head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:16px;
+    padding-bottom:8px;
+    border-bottom:3px solid var(--c-ink);
+  }
+
+  .panel__head h2{
+    margin:0;
+    font-size:15px;
+    letter-spacing:-.01em;
+    text-transform:uppercase;
+  }
+
+  .panel__head span{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--c-secondary);
+    font-weight:700;
+  }
+
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+
+  .hint{
+    margin:14px 0 0;
+    font-family:var(--mono);
+    font-size:11px;
+    line-height:1.55;
+    color:var(--c-muted);
+  }
+
+  /* —— 按钮 —— */
+  .btn{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:9px 17px;
+    font-family:var(--font);
+    font-size:13px;
+    font-weight:900;
+    letter-spacing:.02em;
+    color:var(--c-ink);
+    background:var(--c-paper);
+    border:3px solid var(--c-ink);
+    border-radius:var(--radius);
+    cursor:pointer;
+    box-shadow:5px 5px 0 var(--c-ink);
+    transition:transform .1s linear, box-shadow .1s linear, background .1s linear;
+  }
+
+  .btn:hover{
+    background:var(--c-bg);
+    transform:translate(-2px,-2px);
+    box-shadow:9px 9px 0 var(--c-ink);
+  }
+
+  .btn:active{
+    transform:translate(4px,4px);
+    box-shadow:1px 1px 0 var(--c-ink);
+    background:var(--c-bg);
+  }
+
+  .btn:focus-visible{
+    outline:3px solid var(--c-blue);
+    outline-offset:3px;
+  }
+
+  .btn[disabled]{
+    color:#6f6e66;
+    background:#dedcd1;
+    border:3px dashed #8d8b80;
+    box-shadow:none;
+    transform:none;
+    cursor:not-allowed;
+    text-decoration:line-through;
+  }
+
+  .btn--primary{
+    background:var(--c-ink);
+    color:var(--c-bg);
+    box-shadow:5px 5px 0 var(--c-secondary);
+  }
+
+  .btn--primary:hover{
+    background:var(--c-ink);
+    color:var(--c-bg);
+    box-shadow:9px 9px 0 var(--c-secondary);
+  }
+
+  .btn--secondary{
+    background:var(--c-paper);
+    border-style:solid;
+  }
+
+  .btn--icon{
+    background:var(--c-blue);
+    color:#fff;
+    box-shadow:5px 5px 0 var(--c-ink);
+  }
+
+  .btn--icon:hover{
+    background:var(--c-secondary);
+    color:var(--c-ink);
+    box-shadow:9px 9px 0 var(--c-ink);
+  }
+
+  .btn--icon svg{width:15px;height:15px;flex:none}
+
+  /* —— 输入框 —— */
+  .field{display:block;margin-bottom:14px}
+  .field:last-of-type{margin-bottom:0}
+
+  .field__label{
+    display:block;
+    margin-bottom:5px;
+    font-family:var(--mono);
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+  }
+
+  .input{
+    width:100%;
+    padding:9px 12px;
+    font-family:var(--mono);
+    font-size:13px;
+    font-weight:700;
+    color:var(--c-ink);
+    background:#fff;
+    border:3px solid var(--c-ink);
+    border-radius:0;
+    transition:background .12s linear, box-shadow .12s linear;
+  }
+
+  .input::placeholder{color:#8a887e;font-weight:400}
+
+  .input:hover{background:#fffef0}
+
+  .input:focus{
+    outline:3px solid var(--c-blue);
+    outline-offset:3px;
+    background:#fff;
+    box-shadow:inset -4px -4px 0 var(--c-bg);
+  }
+
+  .input[disabled]{
+    color:#7d7b72;
+    background:
+      repeating-linear-gradient(135deg, rgba(0,0,0,.09) 0 6px, transparent 6px 12px),
+      #e6e4d9;
+    border-style:dashed;
+    cursor:not-allowed;
+  }
+
+  /* —— 开关 —— */
+  .switch{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    user-select:none;
+  }
+
+  .switch input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  .switch__track{
+    position:relative;
+    width:58px;height:28px;
+    flex:none;
+    background:#fff;
+    border:3px solid var(--c-ink);
+    transition:background .12s linear;
+  }
+
+  .switch__knob{
+    position:absolute;
+    top:2px;left:2px;
+    width:18px;height:18px;
+    background:var(--c-ink);
+    transition:transform .12s linear, background .12s linear;
+  }
+
+  .switch input:checked + .switch__track{
+    background:var(--c-primary);
+  }
+
+  .switch input:checked + .switch__track .switch__knob{
+    transform:translateX(28px);
+    background:var(--c-ink);
+  }
+
+  .switch input:focus-visible + .switch__track{
+    outline:3px solid var(--c-blue);
+    outline-offset:3px;
+  }
+
+  .switch input:disabled + .switch__track{
+    background:
+      repeating-linear-gradient(135deg, rgba(0,0,0,.12) 0 5px, transparent 5px 10px),
+      #dedcd1;
+    border-style:dashed;
+    cursor:not-allowed;
+  }
+
+  .switch__text{font-size:12.5px;font-weight:900;letter-spacing:.02em}
+
+  /* —— 分段控件 —— */
+  .seg{
+    display:inline-flex;
+    border:3px solid var(--c-ink);
+    background:#fff;
+    box-shadow:4px 4px 0 var(--c-ink);
+  }
+
+  .seg input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  .seg label{
+    padding:6px 16px;
+    font-family:var(--font);
+    font-size:12px;
+    font-weight:900;
+    border-right:3px solid var(--c-ink);
+    cursor:pointer;
+    transition:background .1s linear, color .1s linear;
+  }
+
+  .seg label:last-of-type{border-right:0}
+
+  .seg label:hover{background:var(--c-primary)}
+
+  .seg input:checked + label{
+    background:var(--c-ink);
+    color:var(--c-primary);
+  }
+
+  .seg input:disabled + label{
+    color:#8b8a80;
+    background:repeating-linear-gradient(135deg, rgba(0,0,0,.07) 0 5px, transparent 5px 10px);
+    text-decoration:line-through;
+    cursor:not-allowed;
+  }
+
+  .seg input:focus-visible + label{
+    outline:3px solid var(--c-blue);
+    outline-offset:-6px;
+  }
+
+  /* —— 卡片 —— */
+  .card{
+    padding:0;
+    background:#fff;
+    border:3px solid var(--c-ink);
+    box-shadow:5px 5px 0 var(--c-ink);
+  }
+
+  .card__bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    padding:5px 10px;
+    border-bottom:3px solid var(--c-ink);
+    background:var(--c-primary);
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+  }
+
+  .card__bar i{
+    width:8px;height:8px;
+    background:var(--c-ink);
+    display:inline-block;
+  }
+
+  .card__body{padding:14px 15px 16px}
+
+  .card h3{
+    margin:0 0 5px;
+    font-size:17px;
+    letter-spacing:-.02em;
+  }
+
+  .card p{
+    margin:0;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:12.5px;
+    font-weight:500;
+    line-height:1.7;
+    color:#37362f;
+  }
+
+  .card__metric{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    margin-top:12px;
+    padding-top:10px;
+    border-top:3px solid var(--c-ink);
+  }
+
+  .card__metric strong{
+    font-family:var(--font);
+    font-size:34px;
+    line-height:1;
+    letter-spacing:-.04em;
+    color:var(--c-ink);
+    text-shadow:3px 3px 0 var(--c-secondary);
+  }
+
+  .card__metric span{
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    background:var(--c-secondary);
+    color:#fff;
+    padding:2px 6px;
+    border:2px solid var(--c-ink);
+  }
+
+  /* —— 列表 —— */
+  .list{list-style:none;margin:0;padding:0;border-top:3px solid var(--c-ink)}
+
+  .list li + li{border-top:2px solid var(--c-ink)}
+
+  .list a{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 4px;
+    text-decoration:none;
+    color:var(--c-ink);
+    transition:background .1s linear, padding-left .1s linear;
+  }
+
+  .list a:hover{
+    background:var(--c-primary);
+    padding-left:10px;
+  }
+
+  .list a:active{background:var(--c-secondary);color:#fff}
+
+  .list a:focus-visible{
+    outline:3px solid var(--c-blue);
+    outline-offset:2px;
+  }
+
+  .dot{
+    width:10px;height:10px;flex:none;
+    background:var(--c-ink);
+    transform:rotate(45deg);
+  }
+
+  .dot--pink{background:var(--c-secondary)}
+  .dot--blue{background:var(--c-blue)}
+
+  .list__text{flex:1;min-width:0}
+  .list__title{display:block;font-size:12.5px;font-weight:900}
+  .list__meta{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--c-muted)}
+
+  .badge{
+    flex:none;
+    padding:1px 7px;
+    font-family:var(--mono);
+    font-size:9.5px;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--c-primary);
+    background:var(--c-ink);
+  }
+
+  .badge--pink{color:#fff;background:var(--c-secondary)}
+
+  /* —— 提示条 —— */
+  .alert{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:12px 14px 12px 0;
+    margin-bottom:12px;
+    background:var(--c-primary);
+    border:3px solid var(--c-ink);
+    box-shadow:5px 5px 0 var(--c-ink);
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:12.5px;
+    font-weight:500;
+    overflow:hidden;
+  }
+
+  .alert__icon{
+    flex:none;
+    width:34px;
+    align-self:stretch;
+    margin:-1px 0;
+    display:grid;
+    place-items:center;
+    font-family:var(--font);
+    font-size:16px;
+    font-weight:900;
+    color:var(--c-primary);
+    background:
+      repeating-linear-gradient(45deg, var(--c-ink) 0 6px, #333 6px 12px);
+    border-right:3px solid var(--c-ink);
+  }
+
+  .alert p{margin:0;line-height:1.6;padding-left:2px}
+  .alert b{background:var(--c-ink);color:var(--c-primary);padding:0 3px}
+
+  .toast{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:11px 14px;
+    background:var(--c-ink);
+    color:var(--c-primary);
+    border:3px solid var(--c-ink);
+    box-shadow:6px 6px 0 var(--c-secondary);
+    font-size:12.5px;
+    font-weight:900;
+    letter-spacing:.04em;
+  }
+
+  .toast span{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.12em;
+    color:#c9c7bb;
+  }
+
+  /* ============ 底部 ============ */
+  .notes{
+    margin-top:30px;
+    padding:20px clamp(16px,3vw,26px);
+    background:var(--c-paper);
+    border:3px solid var(--c-ink);
+    box-shadow:8px 8px 0 var(--c-ink);
+    transform:rotate(-.2deg);
+  }
+
+  .notes h2{
+    margin:0 0 12px;
+    font-family:var(--font);
+    font-size:14px;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+    background:var(--c-primary);
+    display:inline-block;
+    padding:2px 8px;
+    border:2px solid var(--c-ink);
+  }
+
+  .notes ol{
+    margin:0;
+    padding-left:20px;
+    display:grid;
+    gap:9px;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:12.5px;
+    font-weight:500;
+    line-height:1.65;
+  }
+
+  .notes li::marker{font-family:var(--mono);font-weight:700;color:var(--c-secondary)}
+  .notes b{font-weight:900}
+
+  code.k{
+    font-family:var(--mono);
+    font-size:11px;
+    background:#fff;
+    border:1px solid var(--c-ink);
+    padding:0 3px;
+  }
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:minmax(0,1fr)}
+    .panel--wide{grid-column:auto}
+    .hero,.tokens,.notes{transform:none}
+    .hero::after{right:-6px;top:-16px}
+  }
+
+  @media (min-width:761px){
+    .token:last-child{grid-column:1 / -1}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="hero">
+    <div class="hero__eyebrow">
+      <span class="chip">STYLE 02</span>
+      <span class="chip chip--outline">ACID / ANTI-DESIGN</span>
+    </div>
+    <h1 class="hero__title">酸性设计 <em>Acid</em></h1>
+    <p class="hero__lede">
+      视觉机制：故意把印刷规则撕开——<b>荧光底 + 3px 硬黑边 + 无模糊硬投影</b>，
+      再让面板轻微歪斜、字重极端、字号跳跃。它靠"错位"和"过饱和"成立，而不是靠精致的渐变。
+    </p>
+  </header>
+
+  <section class="tokens" aria-label="设计令牌">
+    <div class="token"><span class="token__key">主色 / Primary</span><span class="token__val"><i class="swatch" style="background:#e4ff1a"></i>#E4FF1A</span></div>
+    <div class="token"><span class="token__key">辅色 / Accent</span><span class="token__val"><i class="swatch" style="background:#ff2d55"></i>#FF2D55</span></div>
+    <div class="token"><span class="token__key">背景 / Base</span><span class="token__val"><i class="swatch" style="background:#fbfaf3"></i>#FBFAF3</span></div>
+    <div class="token"><span class="token__key">文字 / Ink</span><span class="token__val"><i class="swatch" style="background:#0a0a0a"></i>#0A0A0A</span></div>
+    <div class="token"><span class="token__key">圆角 / Radius</span><span class="token__val">0px 全直角</span></div>
+    <div class="token"><span class="token__key">描边与投影</span><span class="token__val">3px 黑边 + 7px 硬投影</span></div>
+    <div class="token"><span class="token__key">字体策略</span><span class="token__val">Arial Black / 等宽混排</span></div>
+  </section>
+
+  <section class="grid">
+
+    <section class="panel">
+      <div class="panel__head"><h2>按钮</h2><span>Button</span></div>
+      <div class="row">
+        <button class="btn btn--primary" type="button">主按钮</button>
+        <button class="btn btn--secondary" type="button">次按钮</button>
+        <button class="btn btn--icon" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="square" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 20h16"/></svg>
+          导出
+        </button>
+        <button class="btn" type="button" disabled>禁用态</button>
+      </div>
+      <p class="hint">hover 位移 -2px、投影加长；active 反向压入；disabled 转虚线边框</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>输入框</h2><span>Input</span></div>
+      <label class="field">
+        <span class="field__label">项目代号</span>
+        <input class="input" type="text" value="ACID-002" autocomplete="off">
+      </label>
+      <label class="field">
+        <span class="field__label">禁用状态</span>
+        <input class="input" type="text" value="LOCKED" disabled>
+      </label>
+      <p class="hint">3px 黑边 + 荧光内嵌阴影，聚焦用蓝色描边跳出整页配色</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>开关</h2><span>Switch</span></div>
+      <div class="row" style="gap:22px">
+        <label class="switch">
+          <input type="checkbox" checked>
+          <span class="switch__track" aria-hidden="true"><span class="switch__knob"></span></span>
+          <span class="switch__text">荧光高亮</span>
+        </label>
+        <label class="switch">
+          <input type="checkbox" disabled>
+          <span class="switch__track" aria-hidden="true"><span class="switch__knob"></span></span>
+          <span class="switch__text">禁用开关</span>
+        </label>
+      </div>
+      <p class="hint">方形滑块走在方形容器里，选中态直接换成荧光底</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>分段控件</h2><span>Segmented</span></div>
+      <div class="seg" role="group" aria-label="视图密度">
+        <input type="radio" name="density" id="d1" checked><label for="d1">紧凑</label>
+        <input type="radio" name="density" id="d2"><label for="d2">标准</label>
+        <input type="radio" name="density" id="d3"><label for="d3">宽松</label>
+        <input type="radio" name="density" id="d4" disabled><label for="d4">锁定</label>
+      </div>
+      <p class="hint">选中项整块反白为黑底荧光字，不加任何圆角</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>卡片</h2><span>Card</span></div>
+      <article class="card">
+        <div class="card__bar"><span>file / 03</span><span><i></i><i></i><i></i></span></div>
+        <div class="card__body">
+          <h3>抵抗排版</h3>
+          <p>用硬边、撞色和轻微歪斜打断页面的秩序感。<br>但正文仍然是黑字白底，读起来一点都不费劲。</p>
+          <div class="card__metric"><strong>142%</strong><span>对比度</span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel__head"><h2>列表</h2><span>List</span></div>
+      <ul class="list">
+        <li><a href="#">
+          <i class="dot dot--pink" aria-hidden="true"></i>
+          <span class="list__text"><span class="list__title">硬投影系统</span><span class="list__meta">5px → 9px</span></span>
+          <span class="badge badge--pink">hover</span>
+        </a></li>
+        <li><a href="#">
+          <i class="dot" aria-hidden="true"></i>
+          <span class="list__text"><span class="list__title">3px 黑描边</span><span class="list__meta">BORDER</span></span>
+          <span class="badge">core</span>
+        </a></li>
+        <li><a href="#">
+          <i class="dot dot--blue" aria-hidden="true"></i>
+          <span class="list__text"><span class="list__title">荧光高亮块</span><span class="list__meta">#E4FF1A</span></span>
+          <span class="badge">token</span>
+        </a></li>
+      </ul>
+    </section>
+
+    <section class="panel panel--wide">
+      <div class="panel__head"><h2>提示</h2><span>Alert / Toast</span></div>
+      <div class="alert">
+        <span class="alert__icon" aria-hidden="true">!</span>
+        <p><b>全本地渲染：</b>没有外链字体、图标或 CDN，所有装饰由渐变、伪元素和 3px 边框构成。</p>
+      </div>
+      <div class="toast">
+        已保存到本地磁盘
+        <span>12:04 · OFFLINE</span>
+      </div>
+    </section>
+
+  </section>
+
+  <footer class="notes">
+    <h2>关键 CSS 手法</h2>
+    <ol>
+      <li><b>硬投影</b>：<code class="k">box-shadow: 5px 5px 0 #0a0a0a</code> 不带模糊半径，hover 时增加到 9px 并把元素位移 -2px，产生"贴纸被掀起"的错觉。</li>
+      <li><b>描边优先</b>：所有容器统一 <code class="k">border: 3px solid</code>，禁用态切成 <code class="k">dashed</code>，无需额外颜色即可区分。</li>
+      <li><b>歪斜网格</b>：面板用 <code class="k">transform: rotate(-.3deg)</code> 与 <code class="k">.28deg</code> 交替，制造手工贴版的错位感，幅度必须小于 1deg 才不伤阅读。</li>
+      <li><b>荧光底纹</b>：<code class="k">repeating-linear-gradient</code> 双向 32px 黑线（透明度 7%）叠在荧光色上，既是网格也是噪点。</li>
+    </ol>
+  </footer>
+
+</main>
+</body>
+</html>

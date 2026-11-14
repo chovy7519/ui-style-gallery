@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Editorial · 杂志编辑风 — UI 风格样本</title>
+<style>
+  :root{
+    --paper:#FBF8F3;
+    --paper-2:#F3EDE3;
+    --paper-3:#FFFDF9;
+    --ink:#191714;
+    --ink-2:#3A342D;
+    --muted:#63594C;
+    --muted-2:#6E6152;
+    --accent:#8C1D2F;
+    --green:#2C5E3F;
+    --rule:#D8D0C2;
+    --serif:Georgia,"Times New Roman","Songti SC","Noto Serif CJK SC","Source Han Serif SC",serif;
+    --sans:"Helvetica Neue",Helvetica,Arial,"PingFang SC","Hiragino Sans GB",sans-serif;
+    --mono:"SFMono-Regular",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--serif);
+    font-size:16px;line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .page{max-width:1120px;margin:0 auto;padding:clamp(20px,3.6vw,48px) clamp(16px,3vw,32px) 64px}
+
+  /* ---------- Hero ---------- */
+  .masthead{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding-bottom:10px;border-bottom:2px solid var(--ink);
+    font-family:var(--sans);font-size:10px;font-weight:600;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  }
+  .masthead .mid{font-family:var(--serif);font-style:italic;font-weight:400;letter-spacing:.04em;text-transform:none;font-size:12.5px;color:var(--ink-2)}
+  .hero{padding:clamp(26px,4vw,48px) 0 clamp(28px,4vw,44px)}
+  .eyebrow{
+    display:flex;align-items:center;gap:12px;
+    font-family:var(--sans);font-size:10.5px;font-weight:600;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--accent);
+  }
+  .eyebrow::after{content:"";height:1px;flex:1;max-width:160px;background:var(--accent)}
+  h1{
+    margin:18px 0 0;
+    font-family:var(--serif);
+    font-size:clamp(40px,7.2vw,68px);
+    font-weight:400;line-height:1.02;letter-spacing:-.025em;
+  }
+  h1 .en{
+    display:block;margin-top:14px;
+    font-family:var(--serif);font-style:italic;font-weight:400;
+    font-size:clamp(16px,2.2vw,22px);letter-spacing:0;
+    color:var(--muted);
+  }
+  .lede{
+    max-width:64ch;margin:26px 0 0;
+    font-family:var(--serif);font-size:clamp(15.5px,1.8vw,17.5px);
+    line-height:1.85;color:var(--ink-2);
+  }
+  .lede strong{
+    font-family:var(--sans);font-size:11px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
+    display:inline-block;margin-right:6px;
+  }
+  .hero-rule{margin-top:26px;border:0;border-top:1px solid var(--rule)}
+
+  /* ---------- Tokens ---------- */
+  .tokens{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);
+    background:linear-gradient(180deg,var(--paper),var(--paper-2));
+  }
+  .token{
+    display:grid;grid-template-columns:26px minmax(0,1fr);grid-template-rows:auto auto;
+    column-gap:10px;align-items:center;
+    padding:14px 14px;
+    border-right:1px solid var(--rule);
+  }
+  .token:last-child{border-right:0}
+  .swatch,.glyph{
+    grid-row:1 / 3;width:26px;height:26px;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--ink);
+  }
+  .glyph{background:var(--paper-3);color:var(--ink);border-color:var(--rule)}
+  .radii{gap:2px;align-items:flex-end;padding:4px}
+  .radii i{display:block;width:5px;height:16px;border:1px solid currentColor}
+  .elev{gap:2px;padding:4px}
+  .elev i{display:block;width:4px;height:16px;background:var(--ink)}
+  .elev i:nth-child(2){margin-left:1px;opacity:.65}
+  .elev i:nth-child(3){margin-left:2px;opacity:.35}
+  .type-glyph{font-family:var(--serif);font-size:16px}
+  .t-name{
+    font-family:var(--sans);font-size:9.5px;font-weight:600;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+    white-space:nowrap;
+  }
+  .t-value{
+    font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink);
+    white-space:normal;line-height:1.35;
+  }
+
+  /* ---------- Components ---------- */
+  .components{margin-top:clamp(26px,4vw,42px)}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:44px}
+  .cell{
+    display:flex;flex-direction:column;gap:16px;
+    padding:26px 0;
+    border-top:1px solid var(--rule);
+  }
+  .cell:nth-child(-n+2){border-top:2px solid var(--ink)}
+  .cell h2{
+    margin:0;
+    font-family:var(--sans);font-size:10.5px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
+  }
+  .cell h2 span{color:var(--muted);font-weight:400;letter-spacing:.1em}
+  .demo{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .demo.col{flex-direction:column;align-items:flex-start;gap:15px}
+  .hint{
+    margin:0;font-family:var(--serif);font-size:12.5px;line-height:1.7;
+    color:var(--muted);font-style:italic;
+  }
+
+  /* buttons */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:44px;padding:0 22px;
+    border:1px solid var(--ink);border-radius:0;
+    font-family:var(--sans);font-size:10.5px;font-weight:600;
+    letter-spacing:.14em;text-transform:uppercase;
+    cursor:pointer;
+    transition:background-color .16s ease,color .16s ease,border-color .16s ease,transform .12s ease;
+  }
+  .btn-primary{background:var(--ink);color:var(--paper)}
+  .btn-primary:hover{background:var(--accent);border-color:var(--accent)}
+  .btn-primary:active{transform:translateY(1px);background:#6E1624;border-color:#6E1624}
+  .btn-secondary{background:transparent;color:var(--ink)}
+  .btn-secondary:hover{background:var(--ink);color:var(--paper)}
+  .btn-secondary:active{transform:translateY(1px)}
+  .btn:disabled{
+    background:var(--paper-2);color:#8A7E70;border-color:var(--rule);
+    cursor:not-allowed;transform:none;
+  }
+  .icon-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:44px;height:44px;
+    border:1px solid var(--ink);border-radius:50%;
+    background:transparent;color:var(--ink);
+    cursor:pointer;
+    transition:background-color .16s ease,color .16s ease,border-color .16s ease,transform .12s ease;
+  }
+  .icon-btn:hover{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+  .icon-btn:active{transform:scale(.94)}
+  .icon-btn:disabled{color:#8A7E70;border-color:var(--rule);background:transparent;cursor:not-allowed;transform:none}
+
+  /* field */
+  .field{display:flex;flex-direction:column;gap:5px;width:100%;max-width:340px}
+  .field label{
+    font-family:var(--sans);font-size:9.5px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  }
+  .field input{
+    width:100%;height:42px;padding:0 2px;
+    border:0;border-bottom:1px solid var(--ink);border-radius:0;
+    background:transparent;
+    color:var(--ink);
+    font-family:var(--serif);font-size:17px;
+    transition:border-color .16s ease,background-color .16s ease;
+  }
+  .field input::placeholder{color:var(--muted-2);font-style:italic}
+  .field input:hover{background:rgba(25,23,20,.03)}
+  .field input:focus{
+    outline:none;border-bottom:2px solid var(--accent);padding-bottom:0;
+  }
+  .field input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .field input:disabled{color:#8A7E70;border-bottom:1px dashed var(--muted);background:transparent;cursor:not-allowed}
+  .field small{font-family:var(--serif);font-size:11.5px;font-style:italic;color:var(--muted)}
+
+  /* switch */
+  .switch{display:inline-flex;align-items:center;gap:12px;position:relative;font-family:var(--serif);font-size:15px;cursor:pointer}
+  .switch input{position:absolute;left:0;top:50%;transform:translateY(-50%);width:46px;height:24px;margin:0;opacity:0;z-index:1;cursor:pointer}
+  .track{
+    flex:0 0 auto;width:46px;height:24px;padding:4px;
+    display:flex;align-items:center;
+    background:transparent;border:1px solid var(--ink);border-radius:0;
+    transition:background-color .16s ease,border-color .16s ease;
+  }
+  .thumb{
+    width:14px;height:14px;border-radius:0;background:var(--ink);
+    transition:transform .18s ease,background-color .16s ease;
+  }
+  .switch input:checked + .track{background:var(--accent);border-color:var(--accent)}
+  .switch input:checked + .track .thumb{background:var(--paper);transform:translateX(22px)}
+  .switch:hover .track{border-color:var(--accent)}
+  .switch:hover .thumb{background:var(--accent)}
+  .switch input:checked:hover + .track .thumb{background:var(--paper)}
+  .switch input:active + .track .thumb{transform:scale(.86)}
+  .switch input:checked:active + .track .thumb{transform:translateX(22px) scale(.86)}
+  .switch input:focus-visible + .track{outline:2px solid var(--accent);outline-offset:3px}
+  .switch input:disabled + .track{opacity:.4}
+  .switch:has(input:disabled){color:#8A7E70;cursor:not-allowed}
+
+  /* segmented */
+  .seg{display:inline-flex;max-width:100%;border-bottom:1px solid var(--ink)}
+  .seg label{position:relative;display:block;cursor:pointer}
+  .seg input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+  .seg label span{
+    display:flex;align-items:center;justify-content:center;
+    min-height:40px;padding:0 16px;
+    font-family:var(--serif);font-size:15px;color:var(--muted);
+    position:relative;
+    transition:color .15s ease,background-color .15s ease;
+  }
+  .seg label span::after{
+    content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:2px;
+    background:var(--accent);transform:scaleX(0);transition:transform .18s ease;
+  }
+  .seg label:hover span{color:var(--ink);background:rgba(25,23,20,.035)}
+  .seg label:active span{background:rgba(25,23,20,.07)}
+  .seg input:checked + span{color:var(--ink);font-style:italic}
+  .seg input:checked + span::after{transform:scaleX(1)}
+  .seg input:focus-visible + span{outline:2px solid var(--accent);outline-offset:-3px}
+  .seg input:disabled + span{color:#9A8D7E;cursor:not-allowed}
+  .seg label:has(input:disabled):hover span{background:transparent;color:#9A8D7E}
+
+  /* card */
+  .card{
+    padding:22px;
+    background:var(--paper-3);
+    border:1px solid var(--rule);
+    border-top:3px solid var(--ink);
+    border-radius:0;
+    transition:border-top-color .2s ease,background-color .2s ease;
+  }
+  .card:hover{border-top-color:var(--accent);background:#FFFEFB}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+  .kicker{
+    font-family:var(--sans);font-size:9.5px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  }
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:2px 7px;
+    border:1px solid var(--accent);border-radius:0;
+    color:var(--accent);
+    font-family:var(--sans);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  }
+  .pill::before{content:"";width:5px;height:5px;background:var(--accent)}
+  .card h3{
+    margin:0 0 6px;
+    font-family:var(--serif);font-size:25px;font-weight:400;line-height:1.2;letter-spacing:-.01em;
+  }
+  .card p{margin:0;font-family:var(--serif);font-size:13.5px;line-height:1.75;color:var(--muted)}
+  .metric{display:flex;align-items:baseline;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .metric strong{font-family:var(--serif);font-size:44px;font-weight:400;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  .metric .unit{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .metric .delta{
+    margin-left:auto;
+    font-family:var(--serif);font-style:italic;font-size:14px;color:var(--green);
+  }
+  .meter{height:2px;margin-top:16px;background:var(--rule);overflow:hidden}
+  .meter i{display:block;height:100%;background:var(--accent)}
+
+  /* list */
+  .list{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
+  .row{
+    display:flex;align-items:center;gap:14px;width:100%;
+    padding:12px 4px;
+    border:0;border-bottom:1px solid var(--rule);
+    background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;
+    transition:background-color .15s ease,padding-left .15s ease;
+  }
+  .row:hover{background:var(--paper-2);padding-left:8px}
+  .row:active{background:#E9E1D4}
+  .row:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+  .row-num{
+    flex:0 0 auto;width:30px;
+    font-family:var(--serif);font-style:italic;font-size:19px;color:var(--muted);
+    font-variant-numeric:tabular-nums;
+  }
+  .row-main{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .row-main b{font-family:var(--serif);font-size:15px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row-main small{font-family:var(--sans);font-size:10px;letter-spacing:.06em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .badge{
+    flex:0 0 auto;padding:2px 7px;border:1px solid var(--accent);
+    font-family:var(--sans);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);
+  }
+  .badge.ok{border-color:var(--green);color:var(--green)}
+  .badge.warn{border-color:var(--muted);color:var(--muted)}
+
+  /* toast */
+  .toast{
+    display:flex;align-items:center;gap:12px;
+    padding:13px 13px 13px 16px;
+    background:var(--paper-3);
+    border:1px solid var(--ink);
+    border-left:5px solid var(--accent);
+    border-radius:0;
+  }
+  .toast-icon{flex:0 0 auto;color:var(--accent)}
+  .toast-copy{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .toast-copy b{font-family:var(--serif);font-size:14px;font-weight:400}
+  .toast-copy span{font-family:var(--serif);font-size:11.5px;font-style:italic;color:var(--muted)}
+  .toast-action{
+    border:0;border-bottom:1px solid var(--ink);background:transparent;color:var(--ink);
+    padding:4px 2px;border-radius:0;
+    font-family:var(--sans);font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    cursor:pointer;
+    transition:color .15s ease,border-color .15s ease;
+  }
+  .toast-action:hover{color:var(--accent);border-color:var(--accent)}
+  .toast-action:active{color:#6E1624;border-color:#6E1624}
+  .toast-close{
+    flex:0 0 auto;width:30px;height:30px;display:grid;place-items:center;
+    border:1px solid transparent;background:transparent;color:var(--muted);
+    font-family:var(--serif);font-size:18px;line-height:1;cursor:pointer;
+    transition:background-color .15s ease,color .15s ease,border-color .15s ease;
+  }
+  .toast-close:hover{color:var(--ink);border-color:var(--ink)}
+  .toast-close:active{background:var(--paper-2)}
+  .toast-close:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+
+  /* states */
+  .states{display:flex;flex-wrap:wrap;gap:14px}
+  .state{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-size:11.5px;font-style:italic;color:var(--muted)}
+  .state i{width:30px;height:30px;border:1px solid var(--ink);background:var(--paper-3)}
+  .state:first-child i{background:var(--paper-2)}
+  .state:nth-child(2) i{background:rgba(140,29,47,.12);border-color:var(--accent)}
+  .state:nth-child(3) i{background:var(--paper-2);border-color:var(--rule)}
+
+  /* rules */
+  .rules{margin-top:clamp(30px,5vw,52px);padding-top:24px;border-top:2px solid var(--ink)}
+  .rules h2{
+    margin:0 0 18px;
+    font-family:var(--sans);font-size:10.5px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  }
+  .rules ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:44px}
+  .rules li{
+    display:flex;gap:14px;
+    padding:16px 0;
+    border-top:1px solid var(--rule);
+  }
+  .rules li:nth-child(-n+2){border-top:0}
+  .rules .no{
+    flex:0 0 auto;
+    font-family:var(--serif);font-style:italic;font-size:22px;line-height:1.1;color:var(--accent);
+  }
+  .rules li b{display:block;margin-bottom:3px;font-family:var(--serif);font-size:15px;font-weight:400}
+  .rules li p{margin:0;font-family:var(--serif);font-size:12.5px;line-height:1.7;color:var(--muted)}
+  .rules li code{
+    display:inline-block;margin-top:7px;
+    font-family:var(--mono);font-size:10.5px;color:var(--accent);
+    border-bottom:1px dotted var(--accent);
+  }
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:1fr;column-gap:0}
+    .cell:nth-child(-n+2){border-top:1px solid var(--rule)}
+    .cell:first-child{border-top:2px solid var(--ink)}
+    .rules ol{grid-template-columns:1fr;column-gap:0}
+    .rules li:nth-child(-n+2){border-top:1px solid var(--rule)}
+    .rules li:first-child{border-top:0}
+    .masthead .mid{display:none}
+    .metric strong{font-size:40px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <div class="masthead">
+    <span>Issue 06 · Style Specimen</span>
+    <span class="mid">Typography, rules, and the quiet interface</span>
+    <span>2026 / 11</span>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">UI Style 06 · System Sample</div>
+    <h1>杂志编辑风<span class="en">Editorial · Type-led Interface</span></h1>
+    <p class="lede"><strong>视觉机制：</strong>把界面当成一本排好版的刊物：衬线正文、紧凑的标题字距、严格的对齐线和发丝分隔线构成层级；颜色只保留纸色、墨色与一个深红强调色，圆角接近零，阴影为零，所有「浮起」都由字号、留白和一根线完成。</p>
+    <hr class="hero-rule">
+  </header>
+
+  <section class="tokens" aria-label="设计 Token">
+    <div class="token">
+      <span class="swatch" style="background:#8C1D2F"></span>
+      <span class="t-name">强调色 Accent</span>
+      <span class="t-value">#8C1D2F</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#2C5E3F"></span>
+      <span class="t-name">辅色 Green</span>
+      <span class="t-value">#2C5E3F</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#FBF8F3"></span>
+      <span class="t-name">纸色 Paper</span>
+      <span class="t-value">#FBF8F3</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#191714"></span>
+      <span class="t-name">墨色 Ink</span>
+      <span class="t-value">#191714</span>
+    </div>
+    <div class="token">
+      <span class="glyph radii" aria-hidden="true">
+        <i style="border-radius:0"></i><i style="border-radius:0"></i><i style="border-radius:1px"></i>
+      </span>
+      <span class="t-name">圆角尺度 Radius</span>
+      <span class="t-value">0 / 1px · 近直角</span>
+    </div>
+    <div class="token">
+      <span class="glyph elev" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="t-name">阴影层级 Elevation</span>
+      <span class="t-value">0 阴影 · 细线分层</span>
+    </div>
+    <div class="token">
+      <span class="glyph type-glyph" aria-hidden="true">Aa</span>
+      <span class="t-name">字体策略 Type</span>
+      <span class="t-value">Georgia / Songti · 双家族</span>
+    </div>
+  </section>
+
+  <section class="components" aria-label="组件样例">
+    <div class="grid">
+
+      <article class="cell">
+        <h2>按钮 <span>Buttons</span></h2>
+        <div class="demo">
+          <button class="btn btn-primary" type="button">订阅专栏</button>
+          <button class="btn btn-secondary" type="button">阅读样刊</button>
+          <button class="icon-btn" type="button" aria-label="收藏">
+            <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+              <path d="M12 4l2.3 4.7 5.2.8-3.8 3.7.9 5.2-4.6-2.4-4.6 2.4.9-5.2L4.5 9.5l5.2-.8L12 4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="btn btn-primary" type="button" disabled>不可用</button>
+        </div>
+        <p class="hint">按钮是直角墨块，文字用 0.14em 字距的大写无衬线；hover 不是变亮，而是整块换成深红，像印刷套色。</p>
+      </article>
+
+      <article class="cell">
+        <h2>文本输入 <span>Text field</span></h2>
+        <div class="field">
+          <label for="ed-email">邮箱地址</label>
+          <input id="ed-email" type="email" placeholder="you@example.com">
+          <small>每周四发送，随时可以退订。</small>
+        </div>
+        <p class="hint">只有一条底线，没有容器；聚焦时底线变红并加粗到 2px，标签始终在上方，保持栏目的对齐线。</p>
+      </article>
+
+      <article class="cell">
+        <h2>开关 <span>Switch</span></h2>
+        <div class="demo col">
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="track"><span class="thumb"></span></span>
+            <span>接收新刊提醒</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="track"><span class="thumb"></span></span>
+            <span>仅周末投递</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" checked disabled>
+            <span class="track"><span class="thumb"></span></span>
+            <span>机构订阅（只读）</span>
+          </label>
+        </div>
+        <p class="hint">方形轨道与方形滑块，选中时以深红反白；这是全页唯一允许的「色块填充」控件。</p>
+      </article>
+
+      <article class="cell">
+        <h2>分段导航 <span>Tabs</span></h2>
+        <div class="seg" role="group" aria-label="栏目">
+          <label><input type="radio" name="ed-seg" checked><span>特写</span></label>
+          <label><input type="radio" name="ed-seg"><span>专栏</span></label>
+          <label><input type="radio" name="ed-seg"><span>档案</span></label>
+          <label><input type="radio" name="ed-seg" disabled><span>播客</span></label>
+        </div>
+        <p class="hint">分段即目录：只有文字和一条 2px 底线，选中项用斜体 + 深红下划线，不用胶囊或滑块。</p>
+      </article>
+
+      <article class="cell">
+        <h2>卡片 <span>Card</span></h2>
+        <article class="card">
+          <div class="card-head">
+            <span class="kicker">订阅数据 · 2026 年 11 月</span>
+            <span class="pill">最新</span>
+          </div>
+          <h3>年度订阅突破十万</h3>
+          <p>过去 30 天新增 8,420 位年度读者，续订率回升至 74%。长篇特写贡献了最多的转化。</p>
+          <div class="metric">
+            <strong>102,480</strong><span class="unit">份</span><span class="delta">+8.4%</span>
+          </div>
+          <div class="meter" aria-hidden="true"><i style="width:74%"></i></div>
+        </article>
+      </article>
+
+      <article class="cell">
+        <h2>目录列表 <span>Index list</span></h2>
+        <ul class="list">
+          <li>
+            <button class="row" type="button">
+              <span class="row-num" aria-hidden="true">01</span>
+              <span class="row-main"><b>纸面上的层级</b><small>设计观察 · 8 分钟阅读</small></span>
+              <span class="badge">新刊</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="row-num" aria-hidden="true">02</span>
+              <span class="row-main"><b>当界面开始排版</b><small>访谈 · 12 分钟阅读</small></span>
+              <span class="badge ok">已读</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="row-num" aria-hidden="true">03</span>
+              <span class="row-main"><b>留白的成本</b><small>专栏 · 6 分钟阅读</small></span>
+              <span class="badge warn">草稿</span>
+            </button>
+          </li>
+        </ul>
+      </article>
+
+      <article class="cell">
+        <h2>提示条 <span>Notice</span></h2>
+        <div class="toast" role="status">
+          <svg class="toast-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M12 11v6M12 7.6v.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          </svg>
+          <div class="toast-copy"><b>本期已加入你的阅读列表</b><span>共 7 篇文章，预计阅读 46 分钟。</span></div>
+          <button class="toast-action" type="button">打开</button>
+          <button class="toast-close" type="button" aria-label="关闭提示">×</button>
+        </div>
+        <p class="hint">提示条像一条编者按：纸底、墨框、5px 深红书脊，动作用下划线文字，不使用填充按钮。</p>
+      </article>
+
+      <article class="cell">
+        <h2>层级与状态 <span>States</span></h2>
+        <div class="states">
+          <div class="state"><i aria-hidden="true"></i><span>基础：纸底 + 发丝线</span></div>
+          <div class="state"><i aria-hidden="true"></i><span>强调：深红色块</span></div>
+          <div class="state"><i aria-hidden="true"></i><span>禁用：去色 + 虚线</span></div>
+        </div>
+        <p class="hint">状态变化优先改字重、斜体、下划线和边框，最后才用颜色；页面没有阴影，因此焦点只能靠 2px 红框。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <footer class="rules">
+    <h2>可直接复用的 4 条规则</h2>
+    <ol>
+      <li>
+        <span class="no" aria-hidden="true">01</span>
+        <div>
+          <b>双家族字体分工</b>
+          <p>标题与正文用衬线，标签、按钮、元信息用无衬线大写；两套字体只在「信息类型」切换时出现。</p>
+          <code>Georgia / Songti + Helvetica</code>
+        </div>
+      </li>
+      <li>
+        <span class="no" aria-hidden="true">02</span>
+        <div>
+          <b>用线而不是阴影分层</b>
+          <p>顶部 2px 粗线定义栏目，发丝线分隔条目；卡片无阴影、无圆角，层级完全由线与留白承担。</p>
+          <code>border-top:1px solid #D8D0C2</code>
+        </div>
+      </li>
+      <li>
+        <span class="no" aria-hidden="true">03</span>
+        <div>
+          <b>一个强调色，克制使用</b>
+          <p>深红只出现在焦点、选中、链接和关键数字上；大面积仍是纸色与墨色，保证阅读节奏。</p>
+          <code>accent #8C1D2F · 面积 &lt; 5%</code>
+        </div>
+      </li>
+      <li>
+        <span class="no" aria-hidden="true">04</span>
+        <div>
+          <b>字距与行高即层级</b>
+          <p>元信息 0.16em 大写、正文 1.85 行高、标题 -0.025em；不靠字号暴涨也能拉开主次。</p>
+          <code>letter-spacing:.16em / line-height:1.85</code>
+        </div>
+      </li>
+    </ol>
+  </footer>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Material You · 动态取色 — UI 风格样本</title>
+<style>
+  :root{
+    --primary:#6750A4;
+    --on-primary:#FFFFFF;
+    --primary-container:#EADDFF;
+    --on-primary-container:#21005D;
+    --secondary:#625B71;
+    --secondary-container:#E8DEF8;
+    --on-secondary-container:#1D192B;
+    --surface:#FEF7FF;
+    --surface-1:#F7F2FA;
+    --surface-2:#F3EDF7;
+    --surface-3:#ECE6F0;
+    --on-surface:#1D1B20;
+    --on-surface-variant:#49454F;
+    --outline:#79747E;
+    --outline-variant:#CAC4D0;
+    --inverse-surface:#322F35;
+    --inverse-on-surface:#F5EFF7;
+    --inverse-primary:#D0BCFF;
+    --error:#B3261E;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --r-xs:4px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:28px; --r-full:999px;
+    --e1:0 1px 2px rgba(0,0,0,.30),0 1px 3px 1px rgba(0,0,0,.15);
+    --e2:0 1px 2px rgba(0,0,0,.30),0 2px 6px 2px rgba(0,0,0,.15);
+    --e3:0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.30);
+    --focus:#6750A4;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--surface);
+    color:var(--on-surface);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+  .page{max-width:1120px;margin:0 auto;padding:clamp(20px,4vw,56px) clamp(16px,3vw,32px) 64px}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;padding:clamp(8px,2vw,24px) 0 clamp(24px,4vw,40px)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--primary);
+  }
+  .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--primary)}
+  h1{
+    margin:14px 0 0;
+    font-size:clamp(36px,6vw,56px);
+    font-weight:400;
+    line-height:1.12;
+    letter-spacing:-.01em;
+  }
+  h1 .en{
+    display:block;margin-top:8px;
+    font-size:clamp(13px,1.6vw,15px);
+    font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--on-surface-variant);
+  }
+  .lede{
+    max-width:74ch;margin:22px 0 0;
+    padding:18px 20px;
+    background:var(--surface-1);
+    border-left:4px solid var(--primary);
+    border-radius:0 var(--r-md) var(--r-md) 0;
+    font-size:clamp(14px,1.6vw,15.5px);
+    line-height:1.75;
+    color:var(--on-surface-variant);
+  }
+  .lede strong{color:var(--on-surface);font-weight:600}
+
+  /* ---------- Tokens ---------- */
+  .tokens{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:8px;
+    padding:10px;
+    background:var(--surface-1);
+    border-radius:var(--r-lg);
+    border:1px solid var(--outline-variant);
+  }
+  .token{
+    display:grid;
+    grid-template-columns:34px minmax(0,1fr);
+    grid-template-rows:auto auto;
+    column-gap:10px;align-items:center;
+    padding:10px;
+    background:var(--surface);
+    border-radius:var(--r-md);
+  }
+  .swatch,.glyph{
+    grid-row:1 / 3;
+    width:34px;height:34px;
+    border-radius:var(--r-sm);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 0 0 1px rgba(29,27,32,.10);
+  }
+  .glyph{background:var(--surface-2);color:var(--primary);box-shadow:none}
+  .radii{gap:2px;align-items:flex-end;padding:6px}
+  .radii i{display:block;width:6px;height:20px;border:1.5px solid currentColor}
+  .elev{gap:2px;padding:6px}
+  .elev i{display:block;width:5px;height:20px;background:var(--primary);border-radius:1px}
+  .elev i:nth-child(2){box-shadow:2px 2px 2px rgba(0,0,0,.20)}
+  .elev i:nth-child(3){box-shadow:3px 3px 5px rgba(0,0,0,.28)}
+  .type-glyph{font-size:19px;font-weight:500;letter-spacing:-.02em}
+  .t-name{font-size:11px;color:var(--on-surface-variant);white-space:nowrap}
+  .t-value{
+    font-size:12px;font-weight:600;color:var(--on-surface);
+    font-variant-numeric:tabular-nums;white-space:normal;line-height:1.35;
+  }
+
+  /* ---------- Component grid ---------- */
+  .components{margin-top:clamp(24px,4vw,40px)}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .cell{
+    display:flex;flex-direction:column;gap:16px;
+    padding:clamp(16px,2.4vw,24px);
+    background:var(--surface-1);
+    border-radius:var(--r-xl);
+  }
+  .cell h2{
+    margin:0;
+    display:flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--on-surface-variant);
+  }
+  .cell h2::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--primary)}
+  .demo{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .demo.col{flex-direction:column;align-items:flex-start;gap:14px}
+  .hint{margin:0;font-size:12px;line-height:1.65;color:var(--on-surface-variant)}
+
+  /* buttons */
+  .btn{
+    position:relative;overflow:hidden;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:46px;padding:0 24px;
+    border:0;border-radius:var(--r-full);
+    font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:.02em;
+    cursor:pointer;
+    transition:box-shadow .2s ease,background-color .2s ease,transform .12s ease;
+  }
+  .btn::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;
+    background:currentColor;opacity:0;transition:opacity .15s ease;pointer-events:none;
+  }
+  .btn:hover::after{opacity:.08}
+  .btn:active::after{opacity:.12}
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--primary);color:var(--on-primary)}
+  .btn-primary:hover{box-shadow:var(--e1)}
+  .btn-secondary{
+    background:transparent;color:var(--primary);
+    box-shadow:inset 0 0 0 1px var(--outline);
+  }
+  .btn-secondary:hover{background:rgba(103,80,164,.08);box-shadow:inset 0 0 0 1px var(--primary)}
+  .btn:disabled{
+    background:rgba(29,27,32,.12);
+    color:rgba(29,27,32,.38);
+    box-shadow:none;cursor:not-allowed;transform:none;
+  }
+  .btn:disabled::after{opacity:0}
+  .icon-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:46px;height:46px;
+    border:0;border-radius:50%;
+    background:var(--primary-container);color:var(--on-primary-container);
+    cursor:pointer;
+    transition:box-shadow .2s ease,background-color .2s ease,transform .12s ease;
+  }
+  .icon-btn:hover{box-shadow:var(--e1);background:#DFCCFF}
+  .icon-btn:active{transform:scale(.94)}
+  .icon-btn:disabled{background:rgba(29,27,32,.12);color:rgba(29,27,32,.38);box-shadow:none;cursor:not-allowed}
+
+  /* text field */
+  .field{position:relative;width:100%;max-width:340px}
+  .field input{
+    width:100%;height:58px;
+    padding:24px 16px 10px;
+    border:0;border-bottom:1px solid var(--outline);
+    border-radius:var(--r-xs) var(--r-xs) 0 0;
+    background:var(--surface-2);
+    color:var(--on-surface);
+    font-family:var(--sans);font-size:15px;
+    transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease;
+  }
+  .field label{
+    position:absolute;left:16px;top:50%;transform:translateY(-50%);
+    font-size:15px;color:var(--on-surface-variant);
+    pointer-events:none;
+    transition:top .16s ease,font-size .16s ease,color .16s ease,transform .16s ease;
+  }
+  .field input:hover{background:var(--surface-3);border-bottom-color:var(--on-surface)}
+  .field input:focus{
+    outline:none;
+    border-bottom:2px solid var(--primary);
+    padding-bottom:9px;
+    box-shadow:0 0 0 3px rgba(103,80,164,.18);
+  }
+  .field input:focus-visible{outline:2px solid var(--primary);outline-offset:0}
+  .field input:focus + label,
+  .field input:not(:placeholder-shown) + label{
+    top:9px;transform:none;font-size:11.5px;color:var(--primary);letter-spacing:.02em;
+  }
+  .field input:disabled{background:rgba(29,27,32,.04);color:rgba(29,27,32,.38);border-bottom-color:rgba(29,27,32,.16)}
+  .field input:disabled + label{color:rgba(29,27,32,.38)}
+  .field input:disabled ~ .field-hint{color:rgba(29,27,32,.38)}
+  .field-hint{display:block;margin:6px 16px 0;font-size:11.5px;color:var(--on-surface-variant)}
+
+  /* switch */
+  .switch{
+    display:inline-flex;align-items:center;gap:12px;position:relative;
+    font-size:14.5px;color:var(--on-surface);cursor:pointer;
+  }
+  .switch input{position:absolute;left:0;top:50%;transform:translateY(-50%);width:52px;height:32px;margin:0;opacity:0;cursor:pointer;z-index:1}
+  .track{
+    flex:0 0 auto;width:52px;height:32px;
+    display:grid;place-items:center;
+    border:2px solid var(--outline);
+    border-radius:var(--r-full);
+    background:var(--surface-2);
+    transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease;
+  }
+  .thumb{
+    width:16px;height:16px;border-radius:50%;background:var(--outline);
+    transition:width .18s ease,height .18s ease,background-color .18s ease,transform .12s ease;
+  }
+  .switch input:checked + .track{background:var(--primary);border-color:var(--primary)}
+  .switch input:checked + .track .thumb{width:24px;height:24px;background:var(--on-primary)}
+  .switch:hover .track{box-shadow:0 0 0 10px rgba(103,80,164,.08)}
+  .switch input:active + .track .thumb{transform:scale(.86)}
+  .switch input:focus-visible + .track{outline:3px solid var(--primary);outline-offset:2px}
+  .switch input:disabled + .track{opacity:.38;box-shadow:none}
+  .switch:has(input:disabled){cursor:not-allowed;color:rgba(29,27,32,.38)}
+  .switch input:disabled:checked + .track{background:rgba(29,27,32,.38);border-color:transparent}
+  .switch input:disabled:checked + .track .thumb{background:var(--surface)}
+
+  /* segmented */
+  .seg{
+    display:inline-flex;max-width:100%;
+    border:1px solid var(--outline);
+    border-radius:var(--r-full);
+    overflow:hidden;
+  }
+  .seg label{position:relative;display:block;cursor:pointer}
+  .seg label + label{border-left:1px solid var(--outline)}
+  .seg input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+  .seg label span{
+    display:flex;align-items:center;justify-content:center;
+    min-height:42px;padding:0 20px;
+    font-size:13.5px;font-weight:500;color:var(--on-surface);
+    transition:background-color .18s ease,color .18s ease;
+  }
+  .seg label:hover span{background:rgba(103,80,164,.08)}
+  .seg label:active span{background:rgba(103,80,164,.14)}
+  .seg input:checked + span{background:var(--secondary-container);color:var(--on-secondary-container);font-weight:600}
+  .seg input:focus-visible + span{outline:3px solid var(--primary);outline-offset:-3px}
+  .seg input:disabled + span{color:rgba(29,27,32,.38);cursor:not-allowed}
+  .seg label:has(input:disabled){cursor:not-allowed}
+  .seg label:has(input:disabled):hover span{background:transparent}
+
+  /* card */
+  .card{
+    padding:22px;
+    background:var(--surface);
+    border-radius:var(--r-lg);
+    box-shadow:var(--e1);
+    transition:box-shadow .22s ease,transform .22s ease;
+  }
+  .card:hover{box-shadow:var(--e2);transform:translateY(-1px)}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+  .kicker{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--on-surface-variant)}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:var(--r-sm);
+    background:var(--primary-container);color:var(--on-primary-container);
+    font-size:11px;font-weight:600;
+  }
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--primary)}
+  .card h3{margin:0 0 6px;font-size:20px;font-weight:500;line-height:1.3}
+  .card p{margin:0;font-size:13px;line-height:1.7;color:var(--on-surface-variant)}
+  .metric{display:flex;align-items:baseline;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .metric strong{font-size:38px;font-weight:500;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .metric .unit{font-size:13px;color:var(--on-surface-variant)}
+  .metric .delta{
+    margin-left:auto;padding:3px 8px;border-radius:var(--r-full);
+    background:#E6F4EA;color:#1E6B3A;font-size:11.5px;font-weight:700;
+  }
+  .meter{height:6px;margin-top:16px;border-radius:var(--r-full);background:var(--surface-3);overflow:hidden}
+  .meter i{display:block;height:100%;border-radius:inherit;background:var(--primary)}
+
+  /* list */
+  .list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+  .row{
+    display:flex;align-items:center;gap:12px;width:100%;
+    padding:10px 12px;
+    border:0;border-radius:var(--r-md);
+    background:transparent;color:inherit;font:inherit;text-align:left;
+    cursor:pointer;
+    transition:background-color .16s ease;
+  }
+  .row:hover{background:rgba(103,80,164,.06)}
+  .row:active{background:rgba(103,80,164,.12)}
+  .row:focus-visible{outline:2px solid var(--primary);outline-offset:-2px}
+  .avatar{
+    flex:0 0 auto;display:grid;place-items:center;
+    width:38px;height:38px;border-radius:50%;
+    background:var(--primary-container);color:var(--on-primary-container);
+    font-size:14px;font-weight:600;
+  }
+  .row-main{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .row-main b{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row-main small{font-size:11.5px;color:var(--on-surface-variant);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .badge{
+    flex:0 0 auto;
+    padding:3px 9px;border-radius:var(--r-sm);
+    font-size:10.5px;font-weight:700;letter-spacing:.02em;
+    background:var(--secondary-container);color:var(--on-secondary-container);
+  }
+  .badge.warn{background:#FDE7E5;color:#8C1D18}
+  .badge.ok{background:#E6F4EA;color:#1E6B3A}
+
+  /* toast */
+  .toast{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 12px 12px 16px;
+    background:var(--inverse-surface);color:var(--inverse-on-surface);
+    border-radius:var(--r-xs);
+    box-shadow:var(--e3);
+  }
+  .toast-icon{flex:0 0 auto;color:var(--inverse-primary)}
+  .toast-copy{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .toast-copy b{font-size:13px;font-weight:600}
+  .toast-copy span{font-size:11.5px;color:rgba(245,239,247,.72)}
+  .toast-action{
+    border:0;background:transparent;color:var(--inverse-primary);
+    padding:8px 10px;border-radius:var(--r-sm);
+    font:600 12px var(--sans);letter-spacing:.04em;cursor:pointer;
+    transition:background-color .15s ease;
+  }
+  .toast-action:hover{background:rgba(208,188,255,.12)}
+  .toast-action:active{background:rgba(208,188,255,.2)}
+  .toast-close{
+    flex:0 0 auto;width:30px;height:30px;
+    display:grid;place-items:center;
+    border:0;border-radius:50%;background:transparent;
+    color:rgba(245,239,247,.72);font-size:18px;line-height:1;cursor:pointer;
+    transition:background-color .15s ease,color .15s ease;
+  }
+  .toast-close:hover{background:rgba(245,239,247,.10);color:var(--inverse-on-surface)}
+  .toast-close:active{background:rgba(245,239,247,.18)}
+  .toast-close:focus-visible{outline:2px solid var(--inverse-primary);outline-offset:1px}
+
+  /* state layers */
+  .states{display:flex;flex-wrap:wrap;gap:10px}
+  .state{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--on-surface-variant)}
+  .state i{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--outline-variant);background-color:var(--surface)}
+  .state:first-child i{background-image:linear-gradient(rgba(103,80,164,.08),rgba(103,80,164,.08))}
+  .state:nth-child(2) i{background-image:linear-gradient(rgba(103,80,164,.12),rgba(103,80,164,.12))}
+  .state:nth-child(3) i{background-image:linear-gradient(rgba(29,27,32,.12),rgba(29,27,32,.12))}
+
+  /* footer rules */
+  .rules{margin-top:clamp(28px,5vw,48px);padding-top:28px;border-top:1px solid var(--outline-variant)}
+  .rules h2{
+    margin:0 0 18px;
+    font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--on-surface-variant);
+  }
+  .rules ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .rules li{
+    padding:16px 18px;
+    background:var(--surface-1);
+    border-radius:var(--r-lg);
+  }
+  .rules li b{display:block;margin-bottom:4px;font-size:14px;font-weight:600}
+  .rules li p{margin:0;font-size:12.5px;line-height:1.7;color:var(--on-surface-variant)}
+  .rules li code{
+    display:inline-block;margin-top:8px;
+    padding:3px 7px;border-radius:var(--r-xs);
+    background:var(--primary-container);color:var(--on-primary-container);
+    font-size:11px;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+    word-break:break-word;
+  }
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:1fr}
+    .rules ol{grid-template-columns:1fr}
+    .metric strong{font-size:34px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="hero">
+    <div class="eyebrow"><span class="dot"></span>UI Style 01 · System Sample</div>
+    <h1>动态取色<span class="en">Material You · Material Design 3</span></h1>
+    <p class="lede"><strong>视觉机制：</strong>从一个种子色推导出 primary / secondary / neutral 等色调角色，用「色调表面 + 8%–12% 状态层」表达交互，而不是依赖大阴影；圆角按 4 / 8 / 16 / 28px 构成尺度，层级越高表面越亮、阴影越重，组件之间共享同一套角色变量。</p>
+  </header>
+
+  <section class="tokens" aria-label="设计 Token">
+    <div class="token">
+      <span class="swatch" style="background:#6750A4"></span>
+      <span class="t-name">主色 Primary</span>
+      <span class="t-value">#6750A4</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#625B71"></span>
+      <span class="t-name">辅色 Secondary</span>
+      <span class="t-value">#625B71</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#FEF7FF"></span>
+      <span class="t-name">表面色 Surface</span>
+      <span class="t-value">#FEF7FF</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#1D1B20"></span>
+      <span class="t-name">文字色 On surface</span>
+      <span class="t-value">#1D1B20</span>
+    </div>
+    <div class="token">
+      <span class="glyph radii" aria-hidden="true">
+        <i style="border-radius:1px"></i><i style="border-radius:3px"></i><i style="border-radius:6px"></i>
+      </span>
+      <span class="t-name">圆角尺度 Radius</span>
+      <span class="t-value">4 / 8 / 16 / 28</span>
+    </div>
+    <div class="token">
+      <span class="glyph elev" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="t-name">阴影层级 Elevation</span>
+      <span class="t-value">e0 – e5 · 双层</span>
+    </div>
+    <div class="token">
+      <span class="glyph type-glyph" aria-hidden="true">Aa</span>
+      <span class="t-name">字体策略 Type</span>
+      <span class="t-value">系统 sans · 5 级字阶</span>
+    </div>
+  </section>
+
+  <section class="components" aria-label="组件样例">
+    <div class="grid">
+
+      <article class="cell">
+        <h2>按钮 Buttons</h2>
+        <div class="demo">
+          <button class="btn btn-primary" type="button">开始使用</button>
+          <button class="btn btn-secondary" type="button">了解更多</button>
+          <button class="icon-btn" type="button" aria-label="添加到收藏">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <button class="btn btn-primary" type="button" disabled>不可用</button>
+        </div>
+        <p class="hint">hover 叠加 8% 状态层，按下 12%；键盘焦点为 3px 主色环；禁用态使用 12% 中性填充 + 38% 文字。</p>
+      </article>
+
+      <article class="cell">
+        <h2>文本输入 Text field</h2>
+        <div class="field">
+          <input id="m3-search" type="text" placeholder=" ">
+          <label for="m3-search">搜索组件或模式</label>
+          <span class="field-hint">聚焦时标签上浮，底边变为 2px 主色。</span>
+        </div>
+        <p class="hint">填充式容器使用 surface-2，避免与页面表面同色；错误态可替换为 error 角色。</p>
+      </article>
+
+      <article class="cell">
+        <h2>开关 Switch</h2>
+        <div class="demo col">
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="track"><span class="thumb"></span></span>
+            <span>自动同步</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="track"><span class="thumb"></span></span>
+            <span>省电模式</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" checked disabled>
+            <span class="track"><span class="thumb"></span></span>
+            <span>企业策略（已锁定）</span>
+          </label>
+        </div>
+        <p class="hint">滑块 16 → 24px 表达开关状态，轨道与滑块同时换色，不只改变位置。</p>
+      </article>
+
+      <article class="cell">
+        <h2>分段控件 Segmented</h2>
+        <div class="seg" role="group" aria-label="时间范围">
+          <label><input type="radio" name="m3-range" checked><span>日</span></label>
+          <label><input type="radio" name="m3-range"><span>周</span></label>
+          <label><input type="radio" name="m3-range"><span>月</span></label>
+          <label><input type="radio" name="m3-range" disabled><span>年</span></label>
+        </div>
+        <p class="hint">选中项使用 secondary-container 角色，与主按钮形成主次区分；段与段之间只有 1px outline。</p>
+      </article>
+
+      <article class="cell">
+        <h2>卡片 Card</h2>
+        <article class="card">
+          <div class="card-head">
+            <span class="kicker">本月留存</span>
+            <span class="pill">实时</span>
+          </div>
+          <h3>活跃用户</h3>
+          <p>过去 28 天的周均活跃用户，按首次访问渠道拆分。自然流量贡献了主要增量。</p>
+          <div class="metric">
+            <strong>24,860</strong><span class="unit">人</span><span class="delta">+8.2%</span>
+          </div>
+          <div class="meter" aria-hidden="true"><i style="width:72%"></i></div>
+        </article>
+      </article>
+
+      <article class="cell">
+        <h2>列表 List</h2>
+        <ul class="list">
+          <li>
+            <button class="row" type="button">
+              <span class="avatar" aria-hidden="true">林</span>
+              <span class="row-main"><b>林一舟</b><small>设计系统 · 2 分钟前</small></span>
+              <span class="badge">审核中</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="avatar" aria-hidden="true">周</span>
+              <span class="row-main"><b>周予安</b><small>数据看板 · 18 分钟前</small></span>
+              <span class="badge ok">已通过</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="avatar" aria-hidden="true">陈</span>
+              <span class="row-main"><b>陈默</b><small>增长实验 · 1 小时前</small></span>
+              <span class="badge warn">待修改</span>
+            </button>
+          </li>
+        </ul>
+      </article>
+
+      <article class="cell">
+        <h2>提示条 Toast</h2>
+        <div class="toast" role="status">
+          <svg class="toast-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M8 12.5l2.6 2.6L16 9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="toast-copy"><b>草稿已保存</b><span>版本 12 已同步到云端。</span></div>
+          <button class="toast-action" type="button">撤销</button>
+          <button class="toast-close" type="button" aria-label="关闭提示">×</button>
+        </div>
+        <p class="hint">Snackbar 使用 inverse-surface 反色表面，圆角只有 4px，与卡片形成明确的层级差。</p>
+      </article>
+
+      <article class="cell">
+        <h2>状态层 State layers</h2>
+        <div class="states">
+          <div class="state"><i aria-hidden="true"></i><span>hover 8%</span></div>
+          <div class="state"><i aria-hidden="true"></i><span>focus / press 12%</span></div>
+          <div class="state"><i aria-hidden="true"></i><span>disabled 12% 填充</span></div>
+        </div>
+        <p class="hint">状态层是同一套主色的透明度叠加，所有组件共用，因此 hover 的「重量」在全站一致，不靠手调颜色。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <footer class="rules">
+    <h2>可直接复用的 4 条规则</h2>
+    <ol>
+      <li>
+        <b>先定义角色，再写组件</b>
+        <p>组件只引用 primary / surface / outline 等角色变量，换种子色时整页自动协调。</p>
+        <code>--primary / --surface-1 / --on-surface-variant</code>
+      </li>
+      <li>
+        <b>用表面亮度表达层级</b>
+        <p>层级越高，表面从 surface 过渡到 surface-1/2/3，阴影只作为辅助，不堆叠多种黑色。</p>
+        <code>surface → surface-1 → surface-2</code>
+      </li>
+      <li>
+        <b>圆角有尺度而非随机</b>
+        <p>4px 用于输入框，16px 用于卡片，28px 用于容器与按钮，形成可记忆的节奏。</p>
+        <code>4 / 8 / 16 / 28 / full</code>
+      </li>
+      <li>
+        <b>状态层统一透明度</b>
+        <p>hover 8%、focus 与 press 12%，禁用态 12% 填充 + 38% 文字，所有交互组件复用。</p>
+        <code>rgba(29,27,32,.08) / .12</code>
+      </li>
+    </ol>
+  </footer>
+
+</main>
+</body>
+</html>

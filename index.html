@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI 风格图鉴 · 21 种视觉语言</title>
+<style>
+  :root{
+    --paper:#F7F5F0;
+    --paper-2:#EFECE4;
+    --ink:#141310;
+    --ink-2:#57534A;
+    --muted:#7C776C;
+    --line:rgba(20,19,16,.14);
+    --line-soft:rgba(20,19,16,.08);
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --ease:cubic-bezier(.22,.68,.2,1);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+  ::selection{background:#141310;color:#F7F5F0}
+
+  .mono{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase}
+
+  /* ---------- 页头 ---------- */
+  .mast{
+    max-width:1440px;
+    margin:0 auto;
+    padding:clamp(30px,4.4vw,62px) clamp(18px,4vw,40px) clamp(24px,3vw,38px);
+  }
+  .mast__top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:16px;
+    padding-bottom:14px;
+    border-bottom:1px solid var(--ink);
+    color:var(--muted);
+  }
+  .mast__top .mono:first-child{color:var(--ink)}
+  .mast__title{
+    margin:26px 0 0;
+    font-size:clamp(38px,6.2vw,74px);
+    font-weight:600;
+    line-height:.98;
+    letter-spacing:-.035em;
+  }
+  .mast__sub{
+    margin:16px 0 0;
+    max-width:56ch;
+    font-size:clamp(13px,1.3vw,15px);
+    line-height:1.7;
+    color:var(--ink-2);
+  }
+  .mast__sub em{
+    font-family:Georgia,"Times New Roman","Songti SC",serif;
+    font-style:italic;
+    color:var(--ink);
+  }
+  .mast__meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 34px;
+    margin:28px 0 0;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+  }
+  .mast__meta div{display:flex;align-items:baseline;gap:8px}
+  .mast__meta dt{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .mast__meta dd{margin:0;font-size:13px;font-weight:500}
+
+  /* ---------- 筛选栏 ---------- */
+  .filters{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(247,245,240,.88);
+    -webkit-backdrop-filter:blur(14px) saturate(1.2);
+    backdrop-filter:blur(14px) saturate(1.2);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .filters__inner{
+    max-width:1440px;
+    margin:0 auto;
+    padding:11px clamp(18px,4vw,40px);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .filters__inner::-webkit-scrollbar{display:none}
+  .chip{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    height:32px;
+    padding:0 14px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:rgba(255,255,255,.5);
+    font-size:12.5px;
+    letter-spacing:.01em;
+    white-space:nowrap;
+    transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease);
+  }
+  .chip b{
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:400;
+    color:var(--muted);
+    transition:color .2s var(--ease);
+  }
+  .chip:hover{border-color:rgba(20,19,16,.4);background:#fff}
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .chip[aria-pressed="true"] b{color:rgba(247,245,240,.62)}
+  .chip:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .filters__count{
+    margin-left:auto;
+    padding-left:14px;
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.1em;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  .filters__count b{color:var(--ink);font-weight:500}
+
+  /* ---------- 网格 ---------- */
+  .grid{
+    max-width:1440px;
+    margin:0 auto;
+    padding:clamp(24px,3vw,40px) clamp(18px,4vw,40px) 76px;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:clamp(26px,2.6vw,40px) clamp(16px,1.8vw,26px);
+  }
+
+  /* ---------- 卡片 ---------- */
+  .card{min-width:0}
+  .card[hidden]{display:none}
+  .card__link{display:block;outline:none}
+  .card__link:focus-visible .thumb{outline:2px solid var(--ink);outline-offset:3px}
+
+  .thumb{
+    position:relative;
+    aspect-ratio:3/2;
+    border-radius:10px;
+    overflow:hidden;
+    background:#111;
+    isolation:isolate;
+    transform:translateZ(0);
+    transition:transform .5s var(--ease),box-shadow .5s var(--ease);
+  }
+  .thumb::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border:1px solid rgba(20,19,16,.18);
+    border-radius:inherit;
+    pointer-events:none;
+    z-index:3;
+  }
+  .thumb iframe{
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:2;
+    width:1200px;
+    height:800px;
+    border:0;
+    background:transparent;
+    transform-origin:0 0;
+    transform:scale(var(--s,.28));
+    pointer-events:none;
+    color-scheme:normal;
+  }
+  .thumb__ph{
+    position:absolute;
+    inset:0;
+    z-index:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    font-size:13px;
+    letter-spacing:.04em;
+    opacity:.58;
+    transition:opacity .3s var(--ease);
+  }
+  .thumb__ph small{
+    font-family:var(--mono);
+    font-size:8.5px;
+    letter-spacing:.16em;
+    opacity:.75;
+  }
+  .thumb.is-loaded .thumb__ph{opacity:0}
+  .thumb__open{
+    position:absolute;
+    right:9px;
+    bottom:9px;
+    z-index:4;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 10px 6px 11px;
+    border-radius:999px;
+    background:rgba(14,13,11,.82);
+    color:#fff;
+    font-size:11px;
+    letter-spacing:.02em;
+    opacity:0;
+    transform:translateY(5px);
+    transition:opacity .32s var(--ease),transform .32s var(--ease);
+    -webkit-backdrop-filter:blur(4px);
+    backdrop-filter:blur(4px);
+  }
+  .thumb__open i{font-style:normal;font-size:11px;transform:translateY(-.5px)}
+  .card__link:hover .thumb{transform:translateY(-4px);box-shadow:0 20px 36px -26px rgba(20,19,16,.55)}
+  .card__link:hover .thumb__open{opacity:1;transform:none}
+
+  .card__meta{padding:14px 2px 0}
+  .eyebrow{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .eyebrow .idx{color:var(--ink)}
+  .eyebrow .rule{flex:1;height:1px;background:var(--line-soft)}
+
+  .card__title{
+    margin:10px 0 0;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .card__title .zh{font-size:19px;font-weight:600;letter-spacing:-.012em;line-height:1.25}
+  .card__title .en{
+    font-size:11.5px;
+    letter-spacing:.055em;
+    text-transform:uppercase;
+    color:var(--muted);
+    line-height:1.3;
+  }
+  .card__desc{
+    margin:9px 0 0;
+    font-size:12.5px;
+    line-height:1.68;
+    color:var(--ink-2);
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+
+  .palette{
+    display:grid;
+    grid-auto-flow:column;
+    grid-auto-columns:minmax(0,1fr);
+    margin-top:14px;
+    border:1px solid var(--line);
+    border-radius:7px;
+    overflow:hidden;
+  }
+  .pal{display:flex;flex-direction:column;min-width:0}
+  .pal + .pal{border-left:1px solid var(--line)}
+  .pal i{display:block;height:24px}
+  .pal em{
+    font-family:var(--mono);
+    font-style:normal;
+    font-size:8.5px;
+    letter-spacing:.02em;
+    line-height:1;
+    padding:5px 2px 4px;
+    text-align:center;
+    color:var(--muted);
+    background:rgba(255,255,255,.62);
+    overflow:hidden;
+    white-space:nowrap;
+  }
+
+  .type{
+    display:flex;
+    align-items:baseline;
+    gap:9px;
+    margin-top:11px;
+    padding-top:10px;
+    border-top:1px solid var(--line-soft);
+  }
+  .type__aa{font-size:19px;line-height:1;letter-spacing:-.01em}
+  .type__label{
+    font-family:var(--mono);
+    font-size:9.5px;
+    letter-spacing:.03em;
+    color:var(--muted);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  /* ---------- 页脚 ---------- */
+  .foot{
+    border-top:1px solid var(--line);
+    padding:22px clamp(18px,4vw,40px) 46px;
+  }
+  .foot__inner{
+    max-width:1440px;
+    margin:0 auto;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    gap:8px 24px;
+    font-size:11.5px;
+    color:var(--muted);
+  }
+
+  @media (min-width:1360px){
+    .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  }
+  @media (max-width:1020px){
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:640px){
+    .grid{grid-template-columns:minmax(0,1fr);gap:30px}
+    .filters__count{display:none}
+    .mast__meta{gap:8px 22px}
+    .card__title .zh{font-size:18px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+    .card__link:hover .thumb{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast__top">
+    <span class="mono">UI Style Atlas</span>
+    <span class="mono">2026 / 21 Specimens</span>
+  </div>
+  <h1 class="mast__title">UI 风格图鉴</h1>
+  <p class="mast__sub"><em>Twenty-one visual languages.</em> 同一套组件，被二十一种材质、秩序与文化语境重新翻译。每张卡片是子页面的实时缩略，点击进入完整样本。</p>
+  <dl class="mast__meta">
+    <div><dt>样本</dt><dd>21 个</dd></div>
+    <div><dt>分组</dt><dd>4 组</dd></div>
+    <div><dt>外部依赖</dt><dd>0</dd></div>
+    <div><dt>缩略方式</dt><dd>1200 × 800 iframe</dd></div>
+  </dl>
+</header>
+
+<nav class="filters" aria-label="按分组筛选">
+  <div class="filters__inner" id="filters"></div>
+</nav>
+
+<main class="grid" id="grid"></main>
+
+<footer class="foot">
+  <div class="foot__inner">
+    <span>全部预览由同目录子页面的 iframe 实时渲染，缩放后裁切，无截图、无网络请求。</span>
+    <span class="mono">Offline · Relative paths</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var GROUPS = [
+    { id:"material", zh:"材质光影", en:"Material & Light" },
+    { id:"modern",   zh:"现代主义", en:"Modernism" },
+    { id:"system",   zh:"系统组件", en:"System UI" },
+    { id:"trend",    zh:"潮流文化", en:"Counterculture" }
+  ];
+
+  var STYLES = [
+    {
+      slug:"glassmorphism", zh:"玻璃拟态", en:"Glassmorphism", group:"material",
+      desc:"背景色团 + 半透明面板 + backdrop-filter 模糊 + 1px 亮边，四层同时在场，玻璃感才成立。",
+      colors:["#67E8F9","#A78BFA","#080C18","#F4F7FF"],
+      font:"-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif",
+      fontLabel:"系统 UI · 400 / 600"
+    },
+    {
+      slug:"claymorphism", zh:"黏土拟态", en:"Claymorphism", group:"material",
+      desc:"同一个元素上的两种光：左上白内阴影受光，右下暖灰内阴影背光，再补一层大扩散外投影，平面就鼓成软陶。",
+      colors:["#6C5CE7","#FF9F8A","#F2EAE0","#332A47"],
+      font:"-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif",
+      fontLabel:"系统 UI · 700 / 800"
+    },
+    {
+      slug:"skeuomorphism", zh:"拟物化", en:"Skeuomorphism", group:"material",
+      desc:"复刻真实材质的光学行为：拉丝渐变、凹槽内阴影、按键外投影，再加螺丝与 LED 这类制造痕迹。",
+      colors:["#1D4ED8","#B45309","#6D4826","#26231D"],
+      font:"-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif",
+      fontLabel:"系统 UI · 500 / 700"
+    },
+    {
+      slug:"liquid-glass", zh:"液态玻璃", en:"Liquid Glass", group:"material",
+      desc:"在玻璃上再叠两层：多层亮边把边缘压成透镜的折射，缓慢移动的背景色团让透出的颜色流动。",
+      colors:["#0A63E0","#FB7185","#E8F0F7","#0A1522"],
+      font:"-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif",
+      fontLabel:"系统 UI · 500 / 700"
+    },
+    {
+      slug:"aurora-gradient", zh:"极光渐变", en:"Aurora Gradient", group:"material",
+      desc:"高饱和色团放到画布之外，用 90px 以上的高斯模糊拉成缓慢流动的色带，近黑底压住亮度。",
+      colors:["#4ADE80","#A78BFA","#05070F","#EAF1FF"],
+      font:"-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif",
+      fontLabel:"系统 UI · 400 / 600"
+    },
+
+    {
+      slug:"swiss", zh:"瑞士国际主义", en:"Swiss Style", group:"modern",
+      desc:"一张看不见的 12 栏网格：全部左对齐到同一基线，用字号落差、1px 细线与大量留白建立秩序，红色只做定位。",
+      colors:["#D71920","#111111","#F3F1EA"],
+      font:"'Helvetica Neue',Helvetica,Arial,'PingFang SC',sans-serif",
+      fontLabel:"Helvetica Neue · 400 / 700"
+    },
+    {
+      slug:"brutalism", zh:"粗野主义", en:"Brutalism", group:"modern",
+      desc:"拒绝修饰：裸露的结构线、系统默认控件感、刺眼的原色块与故意不齐的排版，让「未完成」成为态度。",
+      colors:["#FF2B00","#FFE600","#F2F0E9","#000000"],
+      font:"'Courier New',Courier,monospace",
+      fontLabel:"Courier New · 等宽"
+    },
+    {
+      slug:"neo-brutalism", zh:"新粗野主义", en:"Neo-Brutalism", group:"modern",
+      desc:"3px 黑描边 + 零模糊硬阴影 + 糖果色填充，每个控件都像从背景上剪下来的贴纸。",
+      colors:["#FF5C8A","#8C7CFF","#FFE45C","#FFF3D6","#111111"],
+      font:"-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif",
+      fontLabel:"系统 UI · 800"
+    },
+    {
+      slug:"memphis", zh:"孟菲斯", en:"Memphis", group:"modern",
+      desc:"波浪线、圆点、斜纹、糖果色与不对称旋转同时出现，把理性网格打散成一场 80 年代的后现代游戏。",
+      colors:["#FF4D9D","#FFD93D","#22C7B8","#FFF9E8","#171717"],
+      font:"'Trebuchet MS','Avenir Next','PingFang SC',sans-serif",
+      fontLabel:"Trebuchet MS · 400–800"
+    },
+    {
+      slug:"bauhaus", zh:"包豪斯", en:"Bauhaus", group:"modern",
+      desc:"红黄蓝三原色配圆/方/三角，粗水平线与不对称构图，让每个控件同时是功能部件和构成练习。",
+      colors:["#D7261E","#F2C300","#1D4ED8","#F2E9D8","#111111"],
+      font:"'Futura','Avenir Next','Century Gothic','PingFang SC',sans-serif",
+      fontLabel:"Futura · 400–800"
+    },
+
+    {
+      slug:"material-you", zh:"Material You", en:"Dynamic Color", group:"system",
+      desc:"从一个种子色推导出整套色调角色，用 8%–12% 状态层表达交互而非大阴影，圆角按 4/8/16/28 构成尺度。",
+      colors:["#6750A4","#625B71","#FEF7FF","#1D1B20"],
+      font:"-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif",
+      fontLabel:"系统 UI · 500"
+    },
+    {
+      slug:"ios-fluid", zh:"原生流体", en:"iOS Fluid", group:"system",
+      desc:"半透明材质承载信息，层级靠「材质叠材质」而非描边；圆角连续、间距宽松，反馈统一用可回弹的弹簧曲线。",
+      colors:["#007AFF","#34C759","#1C1C1E"],
+      font:"-apple-system,BlinkMacSystemFont,'SF Pro Text','PingFang SC',sans-serif",
+      fontLabel:"SF Pro · 400–700"
+    },
+    {
+      slug:"fluent-acrylic", zh:"Fluent 亚克力", en:"Fluent Acrylic", group:"system",
+      desc:"30px 模糊 + 125% 饱和 + 噪点模拟亚克力板，2/4/8 三级阴影表达深度，指针高光跟随鼠标揭示表面。",
+      colors:["#0067C0","#006D6D","#1B1B1F"],
+      font:"'Segoe UI',-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif",
+      fontLabel:"Segoe UI · 400–600"
+    },
+    {
+      slug:"flat-2.0", zh:"扁平 2.0", en:"Flat 2.0", group:"system",
+      desc:"纯色块加 45° 阶梯长阴影，层级只有 0 / 4px / 8px 三档，圆角压到 2px，靠字重与高饱和建立秩序。",
+      colors:["#1B6CA8","#117A65","#FFFFFF","#22313F"],
+      font:"'Avenir Next','Segoe UI',-apple-system,'PingFang SC',sans-serif",
+      fontLabel:"Avenir Next · 400 / 700"
+    },
+    {
+      slug:"dark-dashboard", zh:"深色仪表盘", en:"Dark Dashboard", group:"system",
+      desc:"三层近黑表面加 1px 冷色边框建立层级，不用大面积阴影；等宽数字对齐，主指标强调到 42px。",
+      colors:["#38BDF8","#A78BFA","#111A2C","#E6EDF7"],
+      font:"-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif",
+      fontLabel:"系统 UI + 等宽数字"
+    },
+    {
+      slug:"editorial", zh:"杂志编辑风", en:"Editorial", group:"system",
+      desc:"把界面当成排好版的刊物：衬线正文、紧凑标题字距、严格对齐线与发丝分隔，颜色只留纸色、墨色和一个深红。",
+      colors:["#8C1D2F","#2C5E3F","#FBF8F3","#191714"],
+      font:"Georgia,'Times New Roman','Songti SC',serif",
+      fontLabel:"Georgia / 宋体 · 衬线"
+    },
+
+    {
+      slug:"y2k-vaporwave", zh:"Y2K 蒸汽波", en:"Vaporwave", group:"trend",
+      desc:"透视网格地平线、铬合金渐变字与 1998 年的斜面立体按钮，把界面伪装成一台过曝的 CRT 显示器。",
+      colors:["#FF2FB9","#00E5FF","#12002B","#F7ECFF"],
+      font:"'SF Pro Display',system-ui,-apple-system,'PingFang SC',sans-serif",
+      fontLabel:"SF Pro Display · 宽字距"
+    },
+    {
+      slug:"acid", zh:"酸性设计", en:"Acid Graphic", group:"trend",
+      desc:"荧光底 + 3px 硬黑边 + 无模糊硬投影，面板轻微歪斜、字重与字号极端跳跃，靠错位与过饱和成立。",
+      colors:["#E4FF1A","#FF2D55","#FBFAF3","#0A0A0A"],
+      font:"'Arial Black',Impact,'PingFang SC',sans-serif",
+      fontLabel:"Arial Black · 极粗"
+    },
+    {
+      slug:"cyberpunk-hud", zh:"赛博朋克 HUD", en:"Cyberpunk HUD", group:"trend",
+      desc:"切角面板、角标括号与等宽字距构成信息层级，青与品红的光只出现在边缘和数字上，正文保持低饱和。",
+      colors:["#22E6FF","#FF2E6E","#04070B","#D6ECF5"],
+      font:"'SF Mono',ui-monospace,Menlo,Consolas,monospace",
+      fontLabel:"SF Mono · .14em 字距"
+    },
+    {
+      slug:"pixel-8bit", zh:"像素 8-bit", en:"Pixel Retro", group:"trend",
+      desc:"所有边缘都是硬边、所有阴影都是无模糊阶梯块，用等宽字距与 2–4px 多层描边模拟低分辨率网格。",
+      colors:["#FF004D","#29ADFF","#0B0B18","#FFF1E8"],
+      font:"ui-monospace,'SF Mono',Menlo,'Courier New',monospace",
+      fontLabel:"等宽 Mono · .12em"
+    },
+    {
+      slug:"guochao", zh:"国潮 · 新中式", en:"Guochao", group:"trend",
+      desc:"宣纸底 + 朱红印 + 描金线搭骨架，双线细框、竖排题款、月洞门与云纹靠「留白的秩序」成立。",
+      colors:["#A8271B","#A9853F","#F2E9DA","#1B1916"],
+      font:"'Songti SC','STSong','Source Han Serif SC',serif",
+      fontLabel:"宋体为主 · 楷体点睛"
+    }
+  ];
+
+  var grid = document.getElementById("grid");
+  var filterBar = document.getElementById("filters");
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* 占位底色取各子页面真实的 body 背景，预览未挂载时不会露出黑块 */
+  var BG = {
+    glassmorphism:"#080C18", claymorphism:"#F2EAE0", skeuomorphism:"#6D4826",
+    "liquid-glass":"#E8F0F7", "aurora-gradient":"#05070F",
+    swiss:"#F3F1EA", brutalism:"#F2F0E9", "neo-brutalism":"#FFF3D6",
+    memphis:"#FFF9E8", bauhaus:"#F2E9D8",
+    "material-you":"#FEF7FF", "ios-fluid":"#F2F2F7", "fluent-acrylic":"#EDF3F8",
+    "flat-2.0":"#EEF2F5", "dark-dashboard":"#0B1120", editorial:"#FBF8F3",
+    "y2k-vaporwave":"#12002B", acid:"#E4FF1A", "cyberpunk-hud":"#04070B",
+    "pixel-8bit":"#0B0B18", guochao:"#F2E9DA"
+  };
+
+  function isLight(hex){
+    var h = hex.replace("#", "");
+    if (h.length === 3) h = h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+    var r = parseInt(h.slice(0,2),16), g = parseInt(h.slice(2,4),16), b = parseInt(h.slice(4,6),16);
+    return (0.299*r + 0.587*g + 0.114*b) > 150;
+  }
+
+  /* ---------- 筛选栏 ---------- */
+  var countOf = {};
+  STYLES.forEach(function(s){ countOf[s.group] = (countOf[s.group] || 0) + 1; });
+
+  var count = document.createElement("span");
+  count.className = "filters__count";
+  count.innerHTML = "<b>" + STYLES.length + "</b> / " + STYLES.length;
+  var shownEl = count.querySelector("b");
+
+  var chipSpecs = [{ id:"all", zh:"全部", n:STYLES.length }].concat(
+    GROUPS.map(function(g){ return { id:g.id, zh:g.zh, n:countOf[g.id] || 0 }; })
+  );
+
+  chipSpecs.forEach(function(c, i){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip";
+    b.dataset.filter = c.id;
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.innerHTML = c.zh + " <b>" + String(c.n).padStart(2, "0") + "</b>";
+    filterBar.appendChild(b);
+  });
+  filterBar.appendChild(count);
+
+  /* ---------- 渲染卡片 ---------- */
+  var fragment = document.createDocumentFragment();
+
+  STYLES.forEach(function(s, i){
+    var index = String(i + 1).padStart(2, "0");
+    var group = GROUPS.filter(function(g){ return g.id === s.group; })[0];
+
+    var card = document.createElement("article");
+    card.className = "card";
+    card.dataset.group = s.group;
+
+    var pal = s.colors.map(function(c){
+      return '<span class="pal"><i style="background:' + c + '"></i><em>' + c + '</em></span>';
+    }).join("");
+
+    var bg = BG[s.slug] || "#141310";
+    var fg = isLight(bg) ? "#141310" : "#F7F5F0";
+
+    card.innerHTML =
+      '<a class="card__link" href="' + s.slug + '/index.html" aria-label="打开 ' + s.zh + ' ' + s.en + ' 示例页">' +
+        '<div class="thumb" data-src="' + s.slug + '/index.html" style="background:' + bg + '">' +
+          '<span class="thumb__ph" style="color:' + fg + '"><small>Preview</small>' + s.zh + '</span>' +
+          '<span class="thumb__open">查看页面 <i>↗</i></span>' +
+        '</div>' +
+        '<div class="card__meta">' +
+          '<div class="eyebrow"><span class="idx">' + index + '</span><span>' + group.zh + '</span><span class="rule"></span><span>' + group.en + '</span></div>' +
+          '<h2 class="card__title" style="font-family:' + s.font + '">' +
+            '<span class="zh">' + s.zh + '</span>' +
+            '<span class="en">' + s.en + '</span>' +
+          '</h2>' +
+          '<p class="card__desc">' + s.desc + '</p>' +
+          '<div class="palette">' + pal + '</div>' +
+          '<div class="type"><span class="type__aa" style="font-family:' + s.font + '">Aa</span>' +
+            '<span class="type__label">' + s.fontLabel + '</span></div>' +
+        '</div>' +
+      '</a>';
+
+    fragment.appendChild(card);
+  });
+
+  grid.appendChild(fragment);
+
+  /* ---------- 缩略图缩放：iframe 1200×800 → 卡片宽度 ---------- */
+  var thumbs = Array.prototype.slice.call(grid.querySelectorAll(".thumb"));
+
+  function fitThumb(thumb){
+    var w = thumb.clientWidth;
+    if (!w) return;
+    thumb.style.setProperty("--s", (w / 1200).toFixed(4));
+  }
+
+  if ("ResizeObserver" in window){
+    var ro = new ResizeObserver(function(entries){
+      entries.forEach(function(e){ fitThumb(e.target); });
+    });
+    thumbs.forEach(function(t){ ro.observe(t); });
+  }
+  thumbs.forEach(fitThumb);
+  window.addEventListener("resize", function(){ thumbs.forEach(fitThumb); }, { passive:true });
+
+  /* ---------- 懒加载 iframe ---------- */
+  function mount(thumb){
+    if (thumb.dataset.mounted) return;
+    thumb.dataset.mounted = "1";
+    var frame = document.createElement("iframe");
+    frame.src = thumb.dataset.src;
+    frame.loading = "lazy";
+    frame.scrolling = "no";
+    frame.title = thumb.dataset.src.replace("/index.html", "") + " 预览";
+    frame.setAttribute("aria-hidden", "true");
+    frame.tabIndex = -1;
+    frame.addEventListener("load", function(){ thumb.classList.add("is-loaded"); });
+    thumb.insertBefore(frame, thumb.firstChild);
+    fitThumb(thumb);
+  }
+
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){
+          mount(e.target);
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: "500px 0px" });
+    thumbs.forEach(function(t){ io.observe(t); });
+  } else {
+    thumbs.forEach(mount);
+  }
+
+  /* ---------- 分组筛选 ---------- */
+  var cards = Array.prototype.slice.call(grid.querySelectorAll(".card"));
+
+  filterBar.addEventListener("click", function(e){
+    var btn = e.target.closest(".chip");
+    if (!btn) return;
+
+    var f = btn.dataset.filter;
+    Array.prototype.forEach.call(filterBar.querySelectorAll(".chip"), function(c){
+      c.setAttribute("aria-pressed", c === btn ? "true" : "false");
+    });
+
+    var visible = 0;
+    cards.forEach(function(card){
+      var show = f === "all" || card.dataset.group === f;
+      card.hidden = !show;
+      if (show) visible++;
+    });
+
+    shownEl.textContent = visible;
+
+    /* 重新显示后宽度从 0 恢复，重算缩放；只补挂当前视口附近的预览，避免一次挂载 21 个 iframe */
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    cards.forEach(function(card){
+      if (card.hidden) return;
+      var t = card.querySelector(".thumb");
+      fitThumb(t);
+      var r = t.getBoundingClientRect();
+      if (r.top < vh + 400 && r.bottom > -400) mount(t);
+    });
+
+    if (!reduced){
+      grid.animate(
+        [{ opacity:.55, transform:"translateY(6px)" }, { opacity:1, transform:"none" }],
+        { duration:260, easing:"cubic-bezier(.22,.68,.2,1)" }
+      );
+    }
+  });
+})();
+</script>
+</body>
+</html>

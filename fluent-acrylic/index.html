@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Fluent Acrylic · 亚克力材质 — UI 风格样本</title>
+<style>
+  :root{
+    --accent:#0067C0;
+    --accent-hover:#0078D4;
+    --accent-press:#005A9E;
+    --accent-soft:#E5F1FB;
+    --teal:#006D6D;
+    --surface:#FFFFFF;
+    --text:#1B1B1F;
+    --text-2:#4F5A66;
+    --border:#C9D4E0;
+    --border-strong:#A9B8C8;
+    --acrylic:rgba(255,255,255,.55);
+    --sans:"Segoe UI",-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --r-s:4px; --r-m:8px; --r-l:12px;
+    --layer-2:0 2px 4px rgba(15,40,70,.10),0 1px 2px rgba(15,40,70,.06);
+    --layer-4:0 4px 10px rgba(15,40,70,.12),0 1px 3px rgba(15,40,70,.08);
+    --layer-8:0 10px 26px rgba(15,40,70,.16),0 2px 6px rgba(15,40,70,.08);
+    --shadow-inset:inset 0 1px 0 rgba(255,255,255,.9);
+    --spring:cubic-bezier(.33,1,.68,1);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;min-height:100vh;
+    color:var(--text);
+    font-family:var(--sans);
+    font-size:15px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1100px 620px at 6% -12%,rgba(0,120,212,.22),transparent 62%),
+      radial-gradient(900px 520px at 102% 6%,rgba(136,90,200,.16),transparent 62%),
+      radial-gradient(900px 620px at 48% 112%,rgba(0,153,153,.16),transparent 62%),
+      #EDF3F8;
+    background-attachment:fixed;
+  }
+  .noise{
+    position:fixed;inset:0;z-index:0;width:100%;height:100%;
+    pointer-events:none;opacity:.05;mix-blend-mode:multiply;
+  }
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .page{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:clamp(22px,4vw,56px) clamp(16px,3vw,32px) 64px}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:clamp(4px,2vw,18px) 0 clamp(22px,4vw,36px)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;
+    font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent-press);
+  }
+  .eyebrow .dot{width:9px;height:9px;background:var(--accent);border-radius:2px;box-shadow:0 0 0 4px rgba(0,103,192,.12)}
+  h1{
+    margin:14px 0 0;
+    font-size:clamp(36px,6vw,54px);
+    font-weight:600;line-height:1.1;letter-spacing:-.02em;
+  }
+  h1 .en{
+    display:block;margin-top:9px;
+    font-size:clamp(12.5px,1.5vw,14px);
+    font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--text-2);
+  }
+  .lede{
+    max-width:74ch;margin:24px 0 0;
+    padding:20px 22px;
+    background:var(--acrylic);
+    border:1px solid rgba(255,255,255,.8);
+    border-left:4px solid var(--accent);
+    border-radius:var(--r-m);
+    box-shadow:var(--layer-4),var(--shadow-inset);
+    -webkit-backdrop-filter:blur(30px) saturate(125%);
+    backdrop-filter:blur(30px) saturate(125%);
+    font-size:clamp(14px,1.6vw,15.5px);
+    line-height:1.75;
+    color:var(--text-2);
+  }
+  .lede strong{color:var(--text);font-weight:600}
+
+  /* ---------- Tokens ---------- */
+  .tokens{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;
+    padding:10px;
+    background:var(--acrylic);
+    border:1px solid rgba(255,255,255,.8);
+    border-radius:var(--r-l);
+    box-shadow:var(--layer-4),var(--shadow-inset);
+    -webkit-backdrop-filter:blur(30px) saturate(125%);
+    backdrop-filter:blur(30px) saturate(125%);
+  }
+  .token{
+    display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;
+    column-gap:10px;align-items:center;padding:10px;
+    background:rgba(255,255,255,.46);
+    border:1px solid rgba(255,255,255,.7);
+    border-radius:var(--r-s);
+  }
+  .swatch,.glyph{
+    grid-row:1 / 3;width:34px;height:34px;border-radius:var(--r-s);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 0 0 1px rgba(27,27,31,.08);
+  }
+  .glyph{background:rgba(255,255,255,.7);color:var(--accent);box-shadow:inset 0 0 0 1px var(--border)}
+  .radii{gap:2px;align-items:flex-end;padding:6px}
+  .radii i{display:block;width:6px;height:20px;border:1.5px solid currentColor}
+  .elev{gap:2px;padding:6px}
+  .elev i{display:block;width:5px;height:20px;background:var(--accent);border-radius:1px}
+  .elev i:nth-child(2){box-shadow:1px 2px 3px rgba(15,40,70,.28)}
+  .elev i:nth-child(3){box-shadow:2px 4px 7px rgba(15,40,70,.34)}
+  .type-glyph{font-size:18px;font-weight:600;letter-spacing:-.02em}
+  .t-name{font-size:11px;color:var(--text-2);white-space:nowrap}
+  .t-value{font-size:12px;font-weight:600;white-space:normal;line-height:1.35;font-variant-numeric:tabular-nums}
+
+  /* ---------- Components ---------- */
+  .components{margin-top:clamp(24px,4vw,38px)}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .cell{
+    display:flex;flex-direction:column;gap:16px;
+    padding:clamp(16px,2.4vw,24px);
+    background:var(--acrylic);
+    border:1px solid rgba(255,255,255,.78);
+    border-radius:var(--r-m);
+    box-shadow:var(--layer-4),var(--shadow-inset);
+    -webkit-backdrop-filter:blur(30px) saturate(125%);
+    backdrop-filter:blur(30px) saturate(125%);
+  }
+  .cell h2{
+    margin:0;display:flex;align-items:center;gap:8px;
+    font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--text-2);
+  }
+  .cell h2::before{content:"";width:8px;height:8px;border-radius:1px;background:var(--accent)}
+  .demo{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .demo.col{flex-direction:column;align-items:flex-start;gap:14px}
+  .hint{margin:0;font-size:12px;line-height:1.65;color:var(--text-2)}
+
+  /* reveal layer */
+  .reveal{position:relative;isolation:isolate;overflow:hidden}
+  .reveal::before{
+    content:"";position:absolute;inset:0;z-index:-1;
+    background:radial-gradient(200px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.55),transparent 65%);
+    opacity:0;transition:opacity .25s ease;pointer-events:none;border-radius:inherit;
+  }
+  .reveal:hover::before{opacity:1}
+  .btn.reveal::before{background:radial-gradient(200px circle at var(--mx,50%) var(--my,0%),rgba(255,255,255,.20),transparent 65%)}
+  .btn-primary.reveal::before{display:none}
+
+  /* buttons */
+  .btn{
+    position:relative;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:42px;padding:0 20px;
+    border:1px solid transparent;border-radius:var(--r-s);
+    font-family:var(--sans);font-size:14px;font-weight:600;
+    cursor:pointer;
+    transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s var(--spring);
+  }
+  .btn-primary{
+    background:var(--accent);color:#fff;
+    box-shadow:0 1px 0 rgba(255,255,255,.18) inset,var(--layer-2);
+  }
+  .btn-primary:hover{background:var(--accent-hover);box-shadow:0 1px 0 rgba(255,255,255,.22) inset,var(--layer-8)}
+  .btn-primary:active{background:var(--accent-press);transform:translateY(1px);box-shadow:0 0 0 1px rgba(0,90,158,.4) inset}
+  .btn-secondary{
+    background:rgba(255,255,255,.62);color:var(--text);
+    border-color:var(--border);
+    box-shadow:var(--shadow-inset);
+  }
+  .btn-secondary:hover{background:#fff;border-color:var(--border-strong)}
+  .btn-secondary:active{background:rgba(255,255,255,.9);transform:translateY(1px)}
+  .btn:disabled{
+    background:rgba(27,27,31,.08);color:rgba(27,27,31,.38);
+    border-color:transparent;box-shadow:none;cursor:not-allowed;transform:none;
+  }
+  .btn:disabled::before{display:none}
+  .icon-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:42px;height:42px;
+    border:1px solid var(--border);border-radius:var(--r-s);
+    background:rgba(255,255,255,.62);color:var(--accent-press);
+    box-shadow:var(--shadow-inset);
+    cursor:pointer;
+    transition:background-color .18s ease,border-color .18s ease,transform .18s var(--spring);
+  }
+  .icon-btn:hover{background:#fff;border-color:var(--accent)}
+  .icon-btn:active{background:var(--accent-soft);transform:scale(.95)}
+  .icon-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+  /* field */
+  .field{display:flex;flex-direction:column;gap:5px;width:100%;max-width:340px}
+  .field label{font-size:12.5px;font-weight:600;color:var(--text)}
+  .field input{
+    width:100%;height:40px;
+    padding:0 12px;
+    border:1px solid var(--border-strong);
+    border-bottom:2px solid var(--border-strong);
+    border-radius:var(--r-s);
+    background:rgba(255,255,255,.7);
+    color:var(--text);
+    font-family:var(--sans);font-size:14px;
+    transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease;
+  }
+  .field input::placeholder{color:#5C6875}
+  .field input:hover{background:#fff;border-color:var(--border-strong)}
+  .field input:focus{
+    outline:none;background:#fff;
+    border-color:var(--accent);
+    border-bottom-color:var(--accent);
+    box-shadow:inset 0 -2px 0 var(--accent),0 0 0 3px rgba(0,103,192,.14);
+  }
+  .field input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .field input:disabled{background:rgba(27,27,31,.05);color:rgba(27,27,31,.38);border-color:var(--border);cursor:not-allowed}
+  .field small{font-size:11.5px;color:var(--text-2)}
+
+  /* switch */
+  .switch{
+    display:inline-flex;align-items:center;gap:12px;position:relative;
+    font-size:14.5px;color:var(--text);cursor:pointer;
+  }
+  .switch input{position:absolute;left:0;top:50%;transform:translateY(-50%);width:40px;height:20px;margin:0;opacity:0;z-index:1;cursor:pointer}
+  .track{
+    flex:0 0 auto;width:40px;height:20px;padding:4px;
+    display:flex;align-items:center;
+    border:1px solid var(--border-strong);
+    border-radius:999px;
+    background:rgba(255,255,255,.6);
+    transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease;
+  }
+  .thumb{
+    width:12px;height:12px;border-radius:50%;
+    background:#5F6B78;
+    transition:transform .26s var(--spring),background-color .2s ease,width .16s ease;
+  }
+  .switch input:checked + .track{background:var(--accent);border-color:var(--accent)}
+  .switch input:checked + .track .thumb{background:#fff;transform:translateX(18px)}
+  .switch:hover .track{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,103,192,.10)}
+  .switch input:active + .track .thumb{width:14px}
+  .switch input:focus-visible + .track{outline:2px solid var(--accent);outline-offset:2px}
+  .switch input:disabled + .track{opacity:.4;box-shadow:none}
+  .switch:has(input:disabled){cursor:not-allowed;color:rgba(27,27,31,.4)}
+
+  /* segmented tabs */
+  .seg{
+    display:flex;flex-wrap:wrap;
+    border-bottom:1px solid var(--border);
+  }
+  .seg label{position:relative;display:block;cursor:pointer}
+  .seg input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+  .seg label span{
+    display:flex;align-items:center;justify-content:center;
+    min-height:38px;padding:0 16px;
+    font-size:13.5px;font-weight:500;color:var(--text-2);
+    position:relative;
+    transition:color .16s ease,background-color .16s ease;
+  }
+  .seg label span::after{
+    content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:3px;
+    background:var(--accent);transform:scaleX(0);transform-origin:center;
+    transition:transform .22s var(--spring);
+  }
+  .seg label:hover span{background:rgba(255,255,255,.55);color:var(--text)}
+  .seg label:active span{background:rgba(0,103,192,.08)}
+  .seg input:checked + span{color:var(--accent-press);font-weight:600}
+  .seg input:checked + span::after{transform:scaleX(1)}
+  .seg input:focus-visible + span{outline:2px solid var(--accent);outline-offset:-2px}
+  .seg input:disabled + span{color:rgba(27,27,31,.32);cursor:not-allowed}
+  .seg label:has(input:disabled):hover span{background:transparent;color:rgba(27,27,31,.32)}
+
+  /* card */
+  .card{
+    padding:22px;
+    background:rgba(255,255,255,.6);
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:var(--r-m);
+    box-shadow:var(--layer-4),var(--shadow-inset);
+    -webkit-backdrop-filter:blur(26px) saturate(130%);
+    backdrop-filter:blur(26px) saturate(130%);
+    transition:box-shadow .22s ease,transform .22s ease;
+  }
+  .card:hover{box-shadow:var(--layer-8),var(--shadow-inset);transform:translateY(-1px)}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+  .kicker{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-2)}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:999px;
+    background:var(--accent-soft);color:var(--accent-press);
+    font-size:11px;font-weight:600;
+  }
+  .pill::before{content:"";width:6px;height:6px;border-radius:1px;background:var(--accent)}
+  .card h3{margin:0 0 6px;font-size:21px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+  .card p{margin:0;font-size:13px;line-height:1.7;color:var(--text-2)}
+  .metric{display:flex;align-items:baseline;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .metric strong{font-size:38px;font-weight:600;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .metric .unit{font-size:13px;color:var(--text-2)}
+  .metric .delta{
+    margin-left:auto;padding:3px 8px;border-radius:var(--r-s);
+    background:rgba(0,109,109,.12);color:#005C5C;
+    font-size:11.5px;font-weight:700;
+  }
+  .meter{height:4px;margin-top:16px;border-radius:2px;background:rgba(27,27,31,.10);overflow:hidden}
+  .meter i{display:block;height:100%;border-radius:inherit;background:var(--accent)}
+
+  /* list */
+  .list{list-style:none;margin:0;padding:4px;background:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.8);border-radius:var(--r-m);box-shadow:var(--shadow-inset)}
+  .row{
+    display:flex;align-items:center;gap:12px;width:100%;
+    padding:10px 12px;border:0;border-radius:var(--r-s);
+    background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;
+    transition:background-color .15s ease,box-shadow .15s ease;
+  }
+  .row:hover{background:rgba(255,255,255,.7);box-shadow:inset 3px 0 0 var(--accent)}
+  .row:active{background:rgba(0,103,192,.08)}
+  .row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .row-icon{
+    flex:0 0 auto;display:grid;place-items:center;
+    width:34px;height:34px;border-radius:var(--r-s);
+    background:var(--accent-soft);color:var(--accent-press);
+  }
+  .row-main{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .row-main b{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row-main small{font-size:11.5px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .badge{
+    flex:0 0 auto;padding:2px 8px;border-radius:var(--r-s);
+    font-size:10.5px;font-weight:700;letter-spacing:.02em;
+    background:rgba(0,103,192,.10);color:var(--accent-press);
+  }
+  .badge.ok{background:rgba(0,109,109,.12);color:#005C5C}
+  .badge.warn{background:rgba(196,73,0,.12);color:#8A3B00}
+
+  /* toast */
+  .toast{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 12px 12px 16px;
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(255,255,255,.9);
+    border-left:4px solid var(--accent);
+    border-radius:var(--r-m);
+    box-shadow:var(--layer-8),var(--shadow-inset);
+    -webkit-backdrop-filter:blur(30px) saturate(125%);
+    backdrop-filter:blur(30px) saturate(125%);
+  }
+  .toast-icon{flex:0 0 auto;color:var(--accent-press)}
+  .toast-copy{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .toast-copy b{font-size:13px;font-weight:600}
+  .toast-copy span{font-size:11.5px;color:var(--text-2)}
+  .toast-action{
+    border:0;background:transparent;color:var(--accent-press);
+    padding:7px 9px;border-radius:var(--r-s);
+    font-family:var(--sans);font-size:12.5px;font-weight:600;cursor:pointer;
+    transition:background-color .15s ease;
+  }
+  .toast-action:hover{background:rgba(0,103,192,.10);text-decoration:underline}
+  .toast-action:active{background:rgba(0,103,192,.18)}
+  .toast-close{
+    flex:0 0 auto;width:30px;height:30px;display:grid;place-items:center;
+    border:1px solid transparent;border-radius:var(--r-s);background:transparent;
+    color:var(--text-2);font-size:18px;line-height:1;cursor:pointer;
+    transition:background-color .15s ease,color .15s ease;
+  }
+  .toast-close:hover{background:rgba(27,27,31,.06);color:var(--text)}
+  .toast-close:active{background:rgba(27,27,31,.12)}
+  .toast-close:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+
+  /* states */
+  .reveal-tile{
+    position:relative;isolation:isolate;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    width:100%;height:112px;padding:14px;
+    border-radius:var(--r-m);
+    background:
+      radial-gradient(320px circle at 20% 20%,rgba(0,120,212,.55),transparent 60%),
+      radial-gradient(300px circle at 85% 80%,rgba(136,90,200,.45),transparent 60%),
+      linear-gradient(135deg,#EAF2FA,#DCE8F5);
+    border:1px solid rgba(255,255,255,.8);
+    box-shadow:var(--shadow-inset);
+  }
+  .reveal-tile b{font-size:13px;position:relative;z-index:1}
+  .reveal-tile small{font-size:11px;color:var(--text-2);position:relative;z-index:1}
+  .states{display:flex;flex-wrap:wrap;gap:10px}
+  .state{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-2)}
+  .state i{width:30px;height:30px;border-radius:var(--r-s);background:rgba(255,255,255,.7);box-shadow:inset 0 0 0 1px var(--border)}
+  .state:first-child i{background-image:linear-gradient(rgba(0,103,192,.10),rgba(0,103,192,.10))}
+  .state:nth-child(2) i{background-image:linear-gradient(rgba(0,103,192,.16),rgba(0,103,192,.16))}
+  .state:nth-child(3) i{background-image:linear-gradient(rgba(27,27,31,.10),rgba(27,27,31,.10))}
+
+  /* rules */
+  .rules{margin-top:clamp(28px,5vw,48px);padding-top:26px;border-top:1px solid rgba(27,27,31,.14)}
+  .rules h2{margin:0 0 18px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-2)}
+  .rules ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .rules li{
+    padding:18px;
+    background:var(--acrylic);
+    border:1px solid rgba(255,255,255,.8);
+    border-radius:var(--r-m);
+    box-shadow:var(--layer-2),var(--shadow-inset);
+    -webkit-backdrop-filter:blur(24px) saturate(120%);
+    backdrop-filter:blur(24px) saturate(120%);
+  }
+  .rules li b{display:block;margin-bottom:4px;font-size:14px;font-weight:600}
+  .rules li p{margin:0;font-size:12.5px;line-height:1.7;color:var(--text-2)}
+  .rules li code{
+    display:inline-block;margin-top:8px;padding:3px 7px;border-radius:3px;
+    background:var(--accent-soft);color:var(--accent-press);
+    font-size:11px;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  }
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:1fr}
+    .rules ol{grid-template-columns:1fr}
+    .metric strong{font-size:34px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+    .reveal::before{display:none}
+  }
+</style>
+</head>
+<body>
+
+<svg class="noise" aria-hidden="true" focusable="false">
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="4" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#grain)"/>
+</svg>
+
+<main class="page">
+
+  <header class="hero">
+    <div class="eyebrow"><span class="dot"></span>UI Style 03 · System Sample</div>
+    <h1>亚克力材质<span class="en">Fluent Acrylic · Depth &amp; Reveal</span></h1>
+    <p class="lede"><strong>视觉机制：</strong>用「背景模糊 30px + 125% 饱和 + 噪点」模拟亚克力板，再以 2 / 4 / 8 三级阴影和 1px 内高光表达深度；所有可交互表面共享同一套指针高光揭示（radial-gradient 跟随鼠标），层级变化只调整阴影与边框亮度。</p>
+  </header>
+
+  <section class="tokens" aria-label="设计 Token">
+    <div class="token">
+      <span class="swatch" style="background:#0067C0"></span>
+      <span class="t-name">主色 Accent</span>
+      <span class="t-value">#0067C0</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#006D6D"></span>
+      <span class="t-name">辅色 Teal</span>
+      <span class="t-value">#006D6D</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:rgba(255,255,255,.55)"></span>
+      <span class="t-name">表面色 Acrylic</span>
+      <span class="t-value">#FFF · 55% + blur 30</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#1B1B1F"></span>
+      <span class="t-name">文字色 Text</span>
+      <span class="t-value">#1B1B1F</span>
+    </div>
+    <div class="token">
+      <span class="glyph radii" aria-hidden="true">
+        <i style="border-radius:1px"></i><i style="border-radius:2px"></i><i style="border-radius:4px"></i>
+      </span>
+      <span class="t-name">圆角尺度 Radius</span>
+      <span class="t-value">2 / 4 / 8 / 12</span>
+    </div>
+    <div class="token">
+      <span class="glyph elev" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="t-name">阴影层级 Elevation</span>
+      <span class="t-value">layer 2 / 4 / 8</span>
+    </div>
+    <div class="token">
+      <span class="glyph type-glyph" aria-hidden="true">Aa</span>
+      <span class="t-name">字体策略 Type</span>
+      <span class="t-value">Segoe UI · 4 级字阶</span>
+    </div>
+  </section>
+
+  <section class="components" aria-label="组件样例">
+    <div class="grid">
+
+      <article class="cell">
+        <h2>按钮 Buttons</h2>
+        <div class="demo">
+          <button class="btn btn-primary reveal" type="button">创建工作区</button>
+          <button class="btn btn-secondary reveal" type="button">查看文档</button>
+          <button class="icon-btn reveal" type="button" aria-label="设置">
+            <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+              <path d="M12 15.2a3.2 3.2 0 100-6.4 3.2 3.2 0 000 6.4z" fill="none" stroke="currentColor" stroke-width="1.7"/>
+              <path d="M19 13.2l1.2 1-1.5 2.6-1.6-.5a6.8 6.8 0 01-1.7 1l-.3 1.7h-3l-.3-1.7a6.8 6.8 0 01-1.7-1l-1.6.5-1.5-2.6 1.2-1a6.7 6.7 0 010-2l-1.2-1 1.5-2.6 1.6.5a6.8 6.8 0 011.7-1l.3-1.7h3l.3 1.7a6.8 6.8 0 011.7 1l1.6-.5 1.5 2.6-1.2 1a6.7 6.7 0 010 2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="btn btn-primary" type="button" disabled>不可用</button>
+        </div>
+        <p class="hint">主按钮是实心 accent，次按钮是半透明亚克力；hover 时指针位置产生白色高光，press 下沉 1px 并加深底色。</p>
+      </article>
+
+      <article class="cell">
+        <h2>文本输入 Text field</h2>
+        <div class="field">
+          <label for="fl-name">工作区名称</label>
+          <input id="fl-name" type="text" placeholder="例如：设计系统">
+          <small>将用于 URL，创建后可修改。</small>
+        </div>
+        <p class="hint">标签独立于输入框；聚焦时底边变为 2px accent，并叠加 3px 半透明外圈，保持 Fluent 的「下划线焦点」。</p>
+      </article>
+
+      <article class="cell">
+        <h2>开关 Toggle</h2>
+        <div class="demo col">
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="track"><span class="thumb"></span></span>
+            <span>透明效果</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="track"><span class="thumb"></span></span>
+            <span>减少动画</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" checked disabled>
+            <span class="track"><span class="thumb"></span></span>
+            <span>组织策略（已锁定）</span>
+          </label>
+        </div>
+        <p class="hint">40×20 的紧凑轨道，12px 滑块；hover 时轨道出现 accent 描边与 3px 光环，而不是放大整个控件。</p>
+      </article>
+
+      <article class="cell">
+        <h2>分段标签 Pivot</h2>
+        <div class="seg" role="group" aria-label="视图切换">
+          <label><input type="radio" name="fl-tab" checked><span>概览</span></label>
+          <label><input type="radio" name="fl-tab"><span>活动</span></label>
+          <label><input type="radio" name="fl-tab"><span>设置</span></label>
+          <label><input type="radio" name="fl-tab" disabled><span>归档</span></label>
+        </div>
+        <p class="hint">Fluent 用「底部 3px 指示条」表达选中，而不是填充整块；未选项 hover 只出现浅色背景。</p>
+      </article>
+
+      <article class="cell">
+        <h2>卡片 Card</h2>
+        <article class="card reveal">
+          <div class="card-head">
+            <span class="kicker">存储空间</span>
+            <span class="pill">团队版</span>
+          </div>
+          <h3>已使用 68%</h3>
+          <p>文档与设计文件占用最多。清理 30 天前的版本历史可释放约 12 GB。</p>
+          <div class="metric">
+            <strong>136</strong><span class="unit">GB / 200 GB</span><span class="delta">+6.4%</span>
+          </div>
+          <div class="meter" aria-hidden="true"><i style="width:68%"></i></div>
+        </article>
+      </article>
+
+      <article class="cell">
+        <h2>列表 List</h2>
+        <ul class="list">
+          <li>
+            <button class="row" type="button">
+              <span class="row-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="17" height="17"><path d="M7 3h7l4 4v14H7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v4h4M10 12h5M10 16h5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="row-main"><b>设计规范 v2.4</b><small>林一舟 · 12 分钟前编辑</small></span>
+              <span class="badge">草稿</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="row-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="17" height="17"><path d="M4 19V9m5 10V5m5 14v-7m5 7V8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <span class="row-main"><b>Q4 指标看板</b><small>周予安 · 1 小时前发布</small></span>
+              <span class="badge ok">已发布</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="row-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="17" height="17"><circle cx="9" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 19a5.5 5.5 0 0111 0M16 6.5a2.5 2.5 0 010 5M17.5 19a4.5 4.5 0 00-2-3.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              </span>
+              <span class="row-main"><b>新成员入职包</b><small>陈默 · 昨天创建</small></span>
+              <span class="badge warn">待审核</span>
+            </button>
+          </li>
+        </ul>
+      </article>
+
+      <article class="cell">
+        <h2>提示条 InfoBar</h2>
+        <div class="toast" role="status">
+          <svg class="toast-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M12 11v6M12 7.6v.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+          </svg>
+          <div class="toast-copy"><b>新版本已就绪</b><span>重启应用即可启用亚克力性能优化。</span></div>
+          <button class="toast-action" type="button">立即重启</button>
+          <button class="toast-close" type="button" aria-label="关闭提示">×</button>
+        </div>
+        <p class="hint">InfoBar 是亚克力条 + 4px accent 左边框，不使用圆角阴影堆叠；动作文字始终带下划线反馈。</p>
+      </article>
+
+      <article class="cell">
+        <h2>高光揭示 Reveal</h2>
+        <div class="reveal-tile reveal" data-reveal>
+          <b>移动指针查看高光</b>
+          <small>radial-gradient 跟随 --mx / --my</small>
+        </div>
+        <p class="hint">所有卡片、按钮、图标按钮共享同一揭示层；用 <code>pointermove</code> 写入两个 CSS 变量，关闭动画偏好时自动禁用。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <footer class="rules">
+    <h2>可直接复用的 4 条规则</h2>
+    <ol>
+      <li>
+        <b>亚克力 = 模糊 + 饱和 + 噪点</b>
+        <p>半透明白只解决透明度，加入低透明度噪点才有真实材质感；噪点用内联 SVG feTurbulence 生成。</p>
+        <code>blur(30px) saturate(125%) + noise 5%</code>
+      </li>
+      <li>
+        <b>深度只用三级阴影</b>
+        <p>layer-2 用于按钮，layer-4 用于卡片，layer-8 用于浮层；每级都叠加 1px 内高光而不是纯黑投影。</p>
+        <code>0 2px 4px / 0 4px 10px / 0 10px 26px</code>
+      </li>
+      <li>
+        <b>高光跟随指针，不跟随组件</b>
+        <p>在容器上监听 pointermove 写入 --mx/--my，所有 .reveal 子元素自动获得同一套物理高光。</p>
+        <code>--mx: 42%; --my: 18%</code>
+      </li>
+      <li>
+        <b>4px 圆角 + 2px 底线</b>
+        <p>控件保持小圆角与清晰边线，焦点用 2px accent 描边或 2px 下划线，避免大圆角削弱工具感。</p>
+        <code>border-radius:4px; border-bottom:2px</code>
+      </li>
+    </ol>
+  </footer>
+
+</main>
+
+<script>
+  (function () {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      el.addEventListener('pointermove', function (event) {
+        var rect = el.getBoundingClientRect();
+        var x = ((event.clientX - rect.left) / rect.width) * 100;
+        var y = ((event.clientY - rect.top) / rect.height) * 100;
+        el.style.setProperty('--mx', x.toFixed(1) + '%');
+        el.style.setProperty('--my', y.toFixed(1) + '%');
+      });
+    });
+  })();
+</script>
+</body>
+</html>

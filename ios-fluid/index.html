@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>iOS Fluid · 原生感 — UI 风格样本</title>
+<style>
+  :root{
+    --blue:#007AFF;
+    --blue-deep:#0066D6;
+    --green:#34C759;
+    --red:#FF3B30;
+    --bg:#F2F2F7;
+    --surface:#FFFFFF;
+    --label:#1C1C1E;
+    --label-2:#5E5E63;
+    --hairline:rgba(60,60,67,.15);
+    --fill:rgba(120,120,128,.14);
+    --material:rgba(255,255,255,.72);
+    --radius-s:10px; --radius-m:14px; --radius-l:22px;
+    --spring:cubic-bezier(.34,1.4,.64,1);
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","San Francisco","PingFang SC","Hiragino Sans GB","Helvetica Neue",sans-serif;
+    --shadow-card:0 1px 0 rgba(255,255,255,.8) inset,0 10px 34px rgba(20,30,60,.08);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--bg);
+    color:var(--label);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body::before,body::after{
+    content:"";position:fixed;z-index:-1;border-radius:50%;
+    filter:blur(90px);pointer-events:none;
+  }
+  body::before{
+    width:560px;height:560px;left:-180px;top:-160px;
+    background:radial-gradient(circle,rgba(0,122,255,.30),rgba(0,122,255,0) 70%);
+  }
+  body::after{
+    width:620px;height:620px;right:-220px;top:180px;
+    background:radial-gradient(circle,rgba(255,94,148,.22),rgba(255,94,148,0) 70%);
+  }
+  :focus-visible{outline:3px solid rgba(0,122,255,.65);outline-offset:2px}
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+  }
+  .page{max-width:1080px;margin:0 auto;padding:clamp(22px,4vw,56px) clamp(16px,3vw,28px) 64px}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:clamp(4px,2vw,20px) 0 clamp(22px,4vw,36px)}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--blue-deep);
+  }
+  .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px rgba(0,122,255,.14)}
+  h1{
+    margin:12px 0 0;
+    font-size:clamp(38px,7vw,60px);
+    font-weight:700;
+    line-height:1.06;
+    letter-spacing:-.035em;
+  }
+  h1 .en{
+    display:block;margin-top:10px;
+    font-size:clamp(12.5px,1.5vw,14px);
+    font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--label-2);
+  }
+  .lede{
+    max-width:72ch;margin:24px 0 0;
+    padding:20px 22px;
+    background:var(--material);
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:var(--radius-l);
+    box-shadow:var(--shadow-card);
+    -webkit-backdrop-filter:blur(28px) saturate(180%);
+    backdrop-filter:blur(28px) saturate(180%);
+    font-size:clamp(14.5px,1.7vw,16px);
+    line-height:1.75;
+    color:var(--label-2);
+  }
+  .lede strong{color:var(--label);font-weight:600}
+
+  /* ---------- Tokens ---------- */
+  .tokens{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;
+    padding:10px;
+    background:var(--material);
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:var(--radius-l);
+    box-shadow:var(--shadow-card);
+    -webkit-backdrop-filter:blur(30px) saturate(180%);
+    backdrop-filter:blur(30px) saturate(180%);
+  }
+  .token{
+    display:grid;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;
+    column-gap:10px;align-items:center;
+    padding:10px;
+    background:rgba(255,255,255,.66);
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:var(--radius-m);
+  }
+  .swatch,.glyph{
+    grid-row:1 / 3;width:34px;height:34px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 0 0 1px rgba(60,60,67,.10);
+  }
+  .glyph{background:rgba(120,120,128,.10);color:var(--blue-deep);box-shadow:none}
+  .radii{gap:2px;align-items:flex-end;padding:6px}
+  .radii i{display:block;width:6px;height:20px;border:1.5px solid currentColor}
+  .elev{gap:2px;padding:6px}
+  .elev i{display:block;width:5px;height:20px;background:var(--blue);border-radius:2px}
+  .elev i:nth-child(2){box-shadow:0 2px 4px rgba(0,60,140,.28)}
+  .elev i:nth-child(3){box-shadow:0 4px 9px rgba(0,60,140,.34)}
+  .type-glyph{font-size:19px;font-weight:600;letter-spacing:-.03em}
+  .t-name{font-size:11px;color:var(--label-2);white-space:nowrap}
+  .t-value{font-size:12px;font-weight:600;white-space:normal;line-height:1.35;font-variant-numeric:tabular-nums}
+
+  /* ---------- Components ---------- */
+  .components{margin-top:clamp(24px,4vw,38px)}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .cell{
+    display:flex;flex-direction:column;gap:16px;
+    padding:clamp(16px,2.4vw,24px);
+    background:var(--material);
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:var(--radius-l);
+    box-shadow:var(--shadow-card);
+    -webkit-backdrop-filter:blur(30px) saturate(180%);
+    backdrop-filter:blur(30px) saturate(180%);
+  }
+  .cell h2{
+    margin:0;display:flex;align-items:center;gap:8px;
+    font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--label-2);
+  }
+  .cell h2::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue)}
+  .demo{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .demo.col{flex-direction:column;align-items:flex-start;gap:14px}
+  .hint{margin:0;font-size:12px;line-height:1.65;color:var(--label-2)}
+
+  /* buttons */
+  .btn{
+    position:relative;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    min-height:48px;padding:0 22px;
+    border:0;border-radius:var(--radius-m);
+    font-family:var(--sans);font-size:16px;font-weight:600;letter-spacing:-.01em;
+    cursor:pointer;
+    transition:background-color .2s ease,filter .2s ease,transform .28s var(--spring),box-shadow .2s ease;
+  }
+  .btn-primary{
+    background:var(--blue-deep);color:#fff;
+    box-shadow:0 1px 0 rgba(255,255,255,.22) inset,0 6px 16px rgba(0,122,255,.24);
+  }
+  .btn-primary:hover{background:#0074E8;filter:brightness(1.02);box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 8px 22px rgba(0,122,255,.30)}
+  .btn-primary:active{transform:scale(.965);filter:brightness(.94)}
+  .btn-secondary{
+    background:rgba(0,122,255,.12);color:var(--blue-deep);
+  }
+  .btn-secondary:hover{background:rgba(0,122,255,.18)}
+  .btn-secondary:active{transform:scale(.965);background:rgba(0,122,255,.24)}
+  .btn:disabled{
+    background:rgba(120,120,128,.16);color:rgba(60,60,67,.36);
+    box-shadow:none;filter:none;transform:none;cursor:not-allowed;
+  }
+  .icon-btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:48px;height:48px;
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:50%;
+    background:rgba(255,255,255,.72);
+    color:var(--blue-deep);
+    box-shadow:0 6px 18px rgba(20,30,60,.10);
+    -webkit-backdrop-filter:blur(20px);
+    backdrop-filter:blur(20px);
+    cursor:pointer;
+    transition:transform .28s var(--spring),background-color .2s ease,box-shadow .2s ease;
+  }
+  .icon-btn:hover{background:#fff;box-shadow:0 10px 24px rgba(20,30,60,.14)}
+  .icon-btn:active{transform:scale(.92)}
+  .icon-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+
+  /* search field */
+  .field{position:relative;width:100%;max-width:360px}
+  .field-icon{
+    position:absolute;left:12px;top:14px;color:var(--label-2);pointer-events:none;
+  }
+  .field input{
+    width:100%;height:44px;
+    padding:0 14px 0 38px;
+    border:0;border-radius:var(--radius-s);
+    background:var(--fill);
+    color:var(--label);
+    font-family:var(--sans);font-size:16px;
+    -webkit-appearance:none;appearance:none;
+    transition:background-color .2s ease,box-shadow .2s ease;
+  }
+  .field input::placeholder{color:#5E5E63}
+  .field input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+  .field input:hover{background:rgba(120,120,128,.20)}
+  .field input:focus{
+    outline:none;background:#fff;
+    box-shadow:0 0 0 4px rgba(0,122,255,.20),0 0 0 1px rgba(0,122,255,.35);
+  }
+  .field input:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+  .field input:disabled{background:rgba(120,120,128,.10);color:rgba(60,60,67,.36);cursor:not-allowed}
+  .field input:disabled ~ .field-icon{opacity:.4}
+
+  /* switch */
+  .switch{
+    display:inline-flex;align-items:center;gap:12px;position:relative;
+    font-size:16px;color:var(--label);cursor:pointer;
+  }
+  .switch input{position:absolute;left:0;top:50%;transform:translateY(-50%);width:51px;height:31px;margin:0;opacity:0;z-index:1;cursor:pointer}
+  .track{
+    flex:0 0 auto;width:51px;height:31px;padding:2px;
+    display:flex;align-items:center;
+    border-radius:999px;
+    background:rgba(120,120,128,.22);
+    transition:background-color .28s ease;
+  }
+  .thumb{
+    width:27px;height:27px;border-radius:50%;background:#fff;
+    box-shadow:0 3px 8px rgba(0,0,0,.18),0 1px 1px rgba(0,0,0,.12);
+    transition:transform .36s var(--spring),width .2s ease;
+  }
+  .switch input:checked + .track{background:var(--green)}
+  .switch input:checked + .track .thumb{transform:translateX(20px)}
+  .switch:hover .track{filter:brightness(.97)}
+  .switch input:active + .track .thumb{width:29px}
+  .switch input:focus-visible + .track{outline:3px solid rgba(0,122,255,.6);outline-offset:3px}
+  .switch input:disabled + .track{opacity:.4}
+  .switch:has(input:disabled){cursor:not-allowed;color:rgba(60,60,67,.4)}
+
+  /* segmented */
+  .seg{
+    position:relative;display:grid;grid-template-columns:repeat(4,1fr);
+    width:100%;max-width:360px;
+    padding:3px;
+    background:rgba(120,120,128,.14);
+    border-radius:var(--radius-s);
+  }
+  .seg input{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+  .seg .seg-thumb{
+    position:absolute;z-index:0;left:3px;top:3px;bottom:3px;
+    width:calc((100% - 6px) / 4);
+    background:#fff;
+    border-radius:7px;
+    box-shadow:0 3px 8px rgba(0,0,0,.12),0 1px 1px rgba(0,0,0,.04);
+    transition:transform .34s var(--spring);
+  }
+  .seg input:nth-of-type(1):checked ~ .seg-thumb{transform:translateX(0)}
+  .seg input:nth-of-type(2):checked ~ .seg-thumb{transform:translateX(100%)}
+  .seg input:nth-of-type(3):checked ~ .seg-thumb{transform:translateX(200%)}
+  .seg input:nth-of-type(4):checked ~ .seg-thumb{transform:translateX(300%)}
+  .seg label{
+    position:relative;z-index:1;
+    display:flex;align-items:center;justify-content:center;
+    min-height:32px;border-radius:7px;
+    font-size:13px;font-weight:500;color:var(--label);cursor:pointer;
+    transition:color .2s ease,opacity .2s ease;
+  }
+  .seg label:hover{color:var(--blue-deep)}
+  .seg label:active{opacity:.6}
+  .seg input:checked + label{font-weight:600}
+  .seg:has(input:focus-visible){outline:3px solid rgba(0,122,255,.6);outline-offset:2px}
+  .seg input:disabled + label{color:rgba(60,60,67,.32);cursor:not-allowed}
+  .seg input:disabled + label:hover{color:rgba(60,60,67,.32)}
+
+  /* card */
+  .card{
+    padding:22px;
+    background:rgba(255,255,255,.82);
+    border:1px solid rgba(255,255,255,.95);
+    border-radius:var(--radius-l);
+    box-shadow:var(--shadow-card);
+    transition:transform .3s var(--spring),box-shadow .25s ease;
+  }
+  .card:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 18px 44px rgba(20,30,60,.12)}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+  .kicker{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--label-2)}
+  .pill{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:4px 10px;border-radius:999px;
+    background:rgba(52,199,89,.16);color:#1B6B33;
+    font-size:11px;font-weight:600;
+  }
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:#248A3D}
+  .card h3{margin:0 0 6px;font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
+  .card p{margin:0;font-size:13.5px;line-height:1.7;color:var(--label-2)}
+  .metric{display:flex;align-items:baseline;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .metric strong{font-size:40px;font-weight:700;line-height:1;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+  .metric .unit{font-size:13px;color:var(--label-2)}
+  .metric .delta{
+    margin-left:auto;padding:4px 9px;border-radius:999px;
+    background:rgba(0,122,255,.10);color:var(--blue-deep);
+    font-size:12px;font-weight:600;
+  }
+  .meter{height:6px;margin-top:16px;border-radius:999px;background:rgba(120,120,128,.16);overflow:hidden}
+  .meter i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#0A84FF,#64D2FF)}
+
+  /* list */
+  .list{list-style:none;margin:0;padding:0;background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.95);border-radius:18px;overflow:hidden}
+  .list li + li .row{position:relative}
+  .list li + li .row::before{
+    content:"";position:absolute;left:62px;right:0;top:0;height:1px;background:var(--hairline);
+  }
+  .row{
+    display:flex;align-items:center;gap:12px;width:100%;
+    padding:12px 14px;
+    border:0;background:transparent;color:inherit;font:inherit;text-align:left;
+    cursor:pointer;
+    transition:background-color .16s ease;
+  }
+  .row:hover{background:rgba(0,122,255,.05)}
+  .row:active{background:rgba(0,122,255,.11)}
+  .row:focus-visible{outline:3px solid rgba(0,122,255,.55);outline-offset:-3px}
+  .avatar{
+    flex:0 0 auto;display:grid;place-items:center;
+    width:38px;height:38px;border-radius:50%;
+    background:linear-gradient(145deg,#5AC8FA,#007AFF);
+    color:#fff;font-size:14px;font-weight:600;
+    box-shadow:0 2px 6px rgba(0,122,255,.28);
+  }
+  .list li:nth-child(2) .avatar{background:linear-gradient(145deg,#FF9F0A,#FF6B00);box-shadow:0 2px 6px rgba(255,107,0,.26)}
+  .list li:nth-child(3) .avatar{background:linear-gradient(145deg,#BF5AF2,#8E44D8);box-shadow:0 2px 6px rgba(142,68,216,.26)}
+  .row-main{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .row-main b{font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row-main small{font-size:12px;color:var(--label-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .badge{
+    flex:0 0 auto;padding:3px 9px;border-radius:999px;
+    font-size:11px;font-weight:600;
+    background:rgba(0,122,255,.12);color:var(--blue-deep);
+  }
+  .badge.ok{background:rgba(52,199,89,.16);color:#1B6B33}
+  .badge.warn{background:rgba(255,59,48,.12);color:#B3261E}
+
+  /* toast */
+  .toast{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 12px 12px 16px;
+    background:rgba(28,28,30,.82);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:18px;
+    box-shadow:0 16px 40px rgba(10,15,30,.24);
+    -webkit-backdrop-filter:blur(30px) saturate(160%);
+    backdrop-filter:blur(30px) saturate(160%);
+  }
+  .toast-icon{flex:0 0 auto;color:#64D2FF}
+  .toast-copy{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .toast-copy b{font-size:13.5px;font-weight:600}
+  .toast-copy span{font-size:12px;color:rgba(255,255,255,.72)}
+  .toast-action{
+    border:0;background:transparent;color:#64D2FF;
+    padding:8px 10px;border-radius:9px;
+    font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;
+    transition:background-color .15s ease,transform .2s var(--spring);
+  }
+  .toast-action:hover{background:rgba(100,210,255,.14)}
+  .toast-action:active{transform:scale(.95);background:rgba(100,210,255,.22)}
+  .toast-close{
+    flex:0 0 auto;width:30px;height:30px;display:grid;place-items:center;
+    border:0;border-radius:50%;background:transparent;color:rgba(255,255,255,.7);
+    font-size:18px;line-height:1;cursor:pointer;
+    transition:background-color .15s ease,color .15s ease;
+  }
+  .toast-close:hover{background:rgba(255,255,255,.12);color:#fff}
+  .toast-close:active{background:rgba(255,255,255,.2)}
+  .toast-close:focus-visible{outline:2px solid #64D2FF;outline-offset:1px}
+
+  /* state layers */
+  .states{display:flex;flex-wrap:wrap;gap:10px}
+  .state{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--label-2)}
+  .state i{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.9);box-shadow:inset 0 0 0 1px var(--hairline)}
+  .state:first-child i{background-image:linear-gradient(rgba(0,122,255,.10),rgba(0,122,255,.10))}
+  .state:nth-child(2) i{background-image:linear-gradient(rgba(0,122,255,.14),rgba(0,122,255,.14))}
+  .state:nth-child(3) i{background-image:linear-gradient(rgba(120,120,128,.22),rgba(120,120,128,.22))}
+
+  /* rules */
+  .rules{margin-top:clamp(28px,5vw,48px);padding-top:26px;border-top:1px solid var(--hairline)}
+  .rules h2{margin:0 0 18px;font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--label-2)}
+  .rules ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .rules li{
+    padding:18px;
+    background:var(--material);
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:18px;
+    box-shadow:var(--shadow-card);
+    -webkit-backdrop-filter:blur(24px);
+    backdrop-filter:blur(24px);
+  }
+  .rules li b{display:block;margin-bottom:4px;font-size:14.5px;font-weight:600;letter-spacing:-.01em}
+  .rules li p{margin:0;font-size:12.5px;line-height:1.7;color:var(--label-2)}
+  .rules li code{
+    display:inline-block;margin-top:8px;padding:3px 7px;border-radius:6px;
+    background:rgba(0,122,255,.10);color:var(--blue-deep);
+    font-size:11px;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  }
+
+  @media (max-width:760px){
+    .grid{grid-template-columns:1fr}
+    .rules ol{grid-template-columns:1fr}
+    .metric strong{font-size:36px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="hero">
+    <div class="eyebrow"><span class="dot"></span>UI Style 02 · System Sample</div>
+    <h1>原生流体<span class="en">iOS Fluid · Human Interface</span></h1>
+    <p class="lede"><strong>视觉机制：</strong>以半透明材质（24–30px 模糊 + 180% 饱和）承载信息，层级靠「材质叠材质」而非描边；圆角连续、间距宽松，交互反馈统一用可回弹的弹簧曲线；分组列表和分段控件提供 iOS 特有的「整块可扫读」结构。</p>
+  </header>
+
+  <section class="tokens" aria-label="设计 Token">
+    <div class="token">
+      <span class="swatch" style="background:#007AFF"></span>
+      <span class="t-name">主色 Tint</span>
+      <span class="t-value">#007AFF</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#34C759"></span>
+      <span class="t-name">辅色 Success</span>
+      <span class="t-value">#34C759</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:rgba(255,255,255,.72)"></span>
+      <span class="t-name">表面色 Material</span>
+      <span class="t-value">#FFF · 72% + blur</span>
+    </div>
+    <div class="token">
+      <span class="swatch" style="background:#1C1C1E"></span>
+      <span class="t-name">文字色 Label</span>
+      <span class="t-value">#1C1C1E</span>
+    </div>
+    <div class="token">
+      <span class="glyph radii" aria-hidden="true">
+        <i style="border-radius:2px"></i><i style="border-radius:4px"></i><i style="border-radius:8px"></i>
+      </span>
+      <span class="t-name">圆角尺度 Radius</span>
+      <span class="t-value">10 / 14 / 18 / 22</span>
+    </div>
+    <div class="token">
+      <span class="glyph elev" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="t-name">阴影层级 Elevation</span>
+      <span class="t-value">柔和单层 + 内高光</span>
+    </div>
+    <div class="token">
+      <span class="glyph type-glyph" aria-hidden="true">Aa</span>
+      <span class="t-name">字体策略 Type</span>
+      <span class="t-value">SF / 系统 sans · 大字标题</span>
+    </div>
+  </section>
+
+  <section class="components" aria-label="组件样例">
+    <div class="grid">
+
+      <article class="cell">
+        <h2>按钮 Buttons</h2>
+        <div class="demo">
+          <button class="btn btn-primary" type="button">继续</button>
+          <button class="btn btn-secondary" type="button">稍后再说</button>
+          <button class="icon-btn" type="button" aria-label="分享">
+            <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true">
+              <path d="M12 15V4m0 0L8 8m4-4l4 4M5 13v5a2 2 0 002 2h10a2 2 0 002-2v-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="btn btn-primary" type="button" disabled>不可用</button>
+        </div>
+        <p class="hint">主按钮使用 14px 圆角与高光内阴影；按下缩小到 96.5% 并回弹，禁用态只降低不透明度，不改变尺寸。</p>
+      </article>
+
+      <article class="cell">
+        <h2>搜索输入 Search field</h2>
+        <div class="field">
+          <label class="sr-only" for="ios-search">搜索联系人、项目或文件</label>
+          <svg class="field-icon" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M16 16l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <input id="ios-search" type="search" placeholder="搜索联系人、项目或文件">
+        </div>
+        <p class="hint">胶囊式填充背景 + 前置图标；聚焦时背景变纯白并出现 4px 半透明蓝色光晕。</p>
+      </article>
+
+      <article class="cell">
+        <h2>开关 Switch</h2>
+        <div class="demo col">
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="track"><span class="thumb"></span></span>
+            <span>允许通知</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="track"><span class="thumb"></span></span>
+            <span>低电量模式</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" checked disabled>
+            <span class="track"><span class="thumb"></span></span>
+            <span>屏幕使用时间（已锁定）</span>
+          </label>
+        </div>
+        <p class="hint">51×31 轨道、27px 白色滑块，开启时滑块以弹簧曲线右移 20px；按下时滑块会略微变宽。</p>
+      </article>
+
+      <article class="cell">
+        <h2>分段控件 Segmented</h2>
+        <div class="seg" role="group" aria-label="数据范围">
+          <input type="radio" name="ios-range" id="ios-d" checked>
+          <label for="ios-d">日</label>
+          <input type="radio" name="ios-range" id="ios-w">
+          <label for="ios-w">周</label>
+          <input type="radio" name="ios-range" id="ios-m">
+          <label for="ios-m">月</label>
+          <input type="radio" name="ios-range" id="ios-y" disabled>
+          <label for="ios-y">年</label>
+          <span class="seg-thumb" aria-hidden="true"></span>
+        </div>
+        <p class="hint">选中态不是换底色，而是一块白色滑块在轨道内滑动，弹簧曲线让切换有物理感。</p>
+      </article>
+
+      <article class="cell">
+        <h2>卡片 Card</h2>
+        <article class="card">
+          <div class="card-head">
+            <span class="kicker">屏幕使用时间</span>
+            <span class="pill">本周</span>
+          </div>
+          <h3>日均 3 小时 42 分</h3>
+          <p>比上周减少 18 分钟，其中社交类下降最明显。专注模式共触发 12 次。</p>
+          <div class="metric">
+            <strong>3h 42m</strong><span class="unit">/ 天</span><span class="delta">−18 min</span>
+          </div>
+          <div class="meter" aria-hidden="true"><i style="width:68%"></i></div>
+        </article>
+      </article>
+
+      <article class="cell">
+        <h2>分组列表 Inset list</h2>
+        <ul class="list">
+          <li>
+            <button class="row" type="button">
+              <span class="avatar" aria-hidden="true">林</span>
+              <span class="row-main"><b>林一舟</b><small>刚刚给你发来一条消息</small></span>
+              <span class="badge">2</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="avatar" aria-hidden="true">周</span>
+              <span class="row-main"><b>周予安</b><small>共享了「Q4 路线图」</small></span>
+              <span class="badge ok">已读</span>
+            </button>
+          </li>
+          <li>
+            <button class="row" type="button">
+              <span class="avatar" aria-hidden="true">陈</span>
+              <span class="row-main"><b>陈默</b><small>会议邀请 · 明天 10:00</small></span>
+              <span class="badge warn">待回复</span>
+            </button>
+          </li>
+        </ul>
+      </article>
+
+      <article class="cell">
+        <h2>提示条 Notification</h2>
+        <div class="toast" role="status">
+          <svg class="toast-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M12 3a6 6 0 016 6v4l1.5 3h-15L6 13V9a6 6 0 016-6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M10 20a2 2 0 004 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <div class="toast-copy"><b>iCloud 同步完成</b><span>48 张照片已上传，可离线查看。</span></div>
+          <button class="toast-action" type="button">查看</button>
+          <button class="toast-close" type="button" aria-label="关闭通知">×</button>
+        </div>
+        <p class="hint">深色毛玻璃通知条悬浮于内容之上，18px 圆角与系统通知保持一致，动作文字使用高亮蓝。</p>
+      </article>
+
+      <article class="cell">
+        <h2>状态与动效 States</h2>
+        <div class="states">
+          <div class="state"><i aria-hidden="true"></i><span>hover 提亮 / 轻微上浮</span></div>
+          <div class="state"><i aria-hidden="true"></i><span>press 缩放 96.5%</span></div>
+          <div class="state"><i aria-hidden="true"></i><span>disabled 40% 不透明度</span></div>
+        </div>
+        <p class="hint">所有位移共用一条弹簧曲线 <code>cubic-bezier(.34,1.4,.64,1)</code>，时长 300–360ms，保证「同一种手感」。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <footer class="rules">
+    <h2>可直接复用的 4 条规则</h2>
+    <ol>
+      <li>
+        <b>材质优先于描边</b>
+        <p>用半透明白 + 背景模糊分层，只在需要分隔时加一条 1px 发丝线，避免厚重边框。</p>
+        <code>backdrop-filter: blur(28px) saturate(180%)</code>
+      </li>
+      <li>
+        <b>一条弹簧曲线统一动效</b>
+        <p>按钮按下、开关滑块、分段滑块全部复用同一曲线，形成可识别的 iOS 手感。</p>
+        <code>cubic-bezier(.34,1.4,.64,1)</code>
+      </li>
+      <li>
+        <b>用整块列表承载扫读</b>
+        <p>分组列表圆角 18px，分隔线从文字起点开始（left 62px），而不是通栏贯穿。</p>
+        <code>border-radius:18px; inset hairline</code>
+      </li>
+      <li>
+        <b>字号大、字重稳</b>
+        <p>标题 700 字重、负字距；正文 16px；辅助文字用 #5E5E63 保证 AA 对比度。</p>
+        <code>letter-spacing:-.035em</code>
+      </li>
+    </ol>
+  </footer>
+
+</main>
+</body>
+</html>

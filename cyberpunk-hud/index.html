@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>赛博朋克 HUD · Cyberpunk HUD — UI 风格样本</title>
+<style>
+  :root{
+    --c-primary:#22e6ff;
+    --c-secondary:#ff2e6e;
+    --c-amber:#ffd400;
+    --c-bg:#04070b;
+    --c-panel:#070e14;
+    --c-text:#d6ecf5;
+    --c-muted:#7d9aa8;
+    --c-line:rgba(34,230,255,.28);
+    --c-line-soft:rgba(34,230,255,.12);
+    --radius:0px;
+    --font:"SF Mono",ui-monospace,Menlo,Consolas,"PingFang SC","Microsoft YaHei",monospace;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0}
+
+  body{
+    min-height:100vh;
+    padding:clamp(18px,4vw,52px) clamp(14px,3.4vw,32px) 70px;
+    color:var(--c-text);
+    font-family:var(--font);
+    font-size:14px;
+    line-height:1.65;
+    letter-spacing:.02em;
+    background:
+      radial-gradient(60% 40% at 15% 0%, rgba(34,230,255,.13), transparent 70%),
+      radial-gradient(50% 40% at 90% 18%, rgba(255,46,110,.1), transparent 70%),
+      repeating-linear-gradient(0deg, rgba(34,230,255,.055) 0 1px, transparent 1px 42px),
+      repeating-linear-gradient(90deg, rgba(34,230,255,.055) 0 1px, transparent 1px 42px),
+      var(--c-bg);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+
+  /* 扫描线 + 暗角 */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:3;
+    pointer-events:none;
+    background:
+      repeating-linear-gradient(0deg, rgba(0,0,0,.42) 0 1px, transparent 1px 3px),
+      radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(0,0,0,.65) 100%);
+    opacity:.55;
+    mix-blend-mode:multiply;
+  }
+
+  .page{
+    position:relative;
+    z-index:2;
+    max-width:1160px;
+    margin:0 auto;
+  }
+
+  /* ============ 顶部 ============ */
+  .hero{
+    position:relative;
+    padding:1px;
+    margin-bottom:20px;
+    background:linear-gradient(135deg, rgba(34,230,255,.62), rgba(34,230,255,.08) 45%, rgba(255,46,110,.42));
+    clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);
+  }
+
+  .hero__in{
+    padding:clamp(20px,3.4vw,34px) clamp(18px,3.4vw,32px);
+    background:
+      radial-gradient(80% 120% at 0% 0%, rgba(34,230,255,.1), transparent 60%),
+      linear-gradient(180deg,#08121a,#050b10);
+    clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);
+  }
+
+  .hero__eyebrow{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+  }
+
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:2px 9px;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color:var(--c-primary);
+    border:1px solid var(--c-line);
+    background:rgba(34,230,255,.07);
+  }
+
+  .chip--hot{color:var(--c-secondary);border-color:rgba(255,46,110,.42);background:rgba(255,46,110,.08)}
+  .chip--dot::before{content:"";width:5px;height:5px;background:var(--c-primary);box-shadow:0 0 8px var(--c-primary)}
+
+  .hero__title{
+    margin:0 0 12px;
+    font-size:clamp(1.9rem,5vw,3.2rem);
+    font-weight:700;
+    line-height:1.1;
+    letter-spacing:.1em;
+    color:#e9fbff;
+    text-shadow:2px 0 rgba(255,46,110,.6), -2px 0 rgba(34,230,255,.6), 0 0 26px rgba(34,230,255,.28);
+  }
+
+  .hero__title em{
+    display:block;
+    margin-top:8px;
+    font-style:normal;
+    font-size:.36em;
+    letter-spacing:.42em;
+    color:var(--c-primary);
+    text-shadow:0 0 16px rgba(34,230,255,.7);
+  }
+
+  .hero__lede{
+    max-width:66ch;
+    margin:0;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:14px;
+    letter-spacing:0;
+    line-height:1.75;
+    color:#c3dbe6;
+  }
+
+  .hero__lede b{color:#fff;font-weight:700;border-bottom:1px solid rgba(34,230,255,.6)}
+
+  /* 刻度尺 */
+  .ticks{
+    height:8px;
+    margin-top:18px;
+    background:
+      repeating-linear-gradient(90deg, rgba(34,230,255,.75) 0 1px, transparent 1px 8px);
+    -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 62%,transparent 100%);
+    mask-image:linear-gradient(90deg,#000 0%,#000 62%,transparent 100%);
+    opacity:.7;
+  }
+
+  /* ============ token 条 ============ */
+  .tokens{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(172px,1fr));
+    gap:1px;
+    margin-bottom:20px;
+    background:var(--c-line-soft);
+    border:1px solid var(--c-line-soft);
+  }
+
+  .token{
+    padding:10px 12px;
+    background:linear-gradient(180deg,#061017,#050b10);
+  }
+
+  .token__key{
+    display:block;
+    margin-bottom:4px;
+    font-size:9.5px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--c-muted);
+  }
+
+  .token__val{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.02em;
+    color:#e6f7ff;
+  }
+
+  .swatch{
+    width:14px;height:14px;flex:none;
+    border:1px solid rgba(255,255,255,.35);
+    box-shadow:0 0 10px currentColor;
+  }
+
+  code{
+    font-family:var(--font);
+    font-size:11px;
+    color:#9fe9f7;
+  }
+
+  /* ============ 组件网格 ============ */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+  }
+
+  .panel{
+    position:relative;
+    padding:1px;
+    background:linear-gradient(180deg, rgba(34,230,255,.42), rgba(34,230,255,.1));
+    clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+  }
+
+  .panel--wide{grid-column:1 / -1}
+
+  .panel__in{
+    padding:16px 17px 19px;
+    height:100%;
+    background:linear-gradient(180deg, rgba(9,22,30,.96), rgba(4,9,13,.98));
+    clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+  }
+
+  .panel__head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:15px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--c-line-soft);
+  }
+
+  .panel__head h2{
+    margin:0;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.14em;
+    color:#eaf9ff;
+  }
+
+  .panel__head span{
+    font-size:9.5px;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color:var(--c-primary);
+    opacity:.72;
+  }
+
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+  .hint{
+    margin:13px 0 0;
+    font-size:10.5px;
+    line-height:1.6;
+    color:var(--c-muted);
+    letter-spacing:.02em;
+  }
+
+  /* —— 按钮：角标括号 —— */
+  .btn{
+    position:relative;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:9px 18px;
+    font-family:var(--font);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#d9f7ff;
+    background:rgba(34,230,255,.07);
+    border:1px solid rgba(34,230,255,.42);
+    border-radius:0;
+    cursor:pointer;
+    transition:background .14s ease, color .14s ease, box-shadow .14s ease, transform .1s ease;
+  }
+
+  .btn::before,
+  .btn::after{
+    content:"";
+    position:absolute;
+    width:8px;height:8px;
+    pointer-events:none;
+  }
+
+  .btn::before{
+    left:-1px;top:-1px;
+    border-top:2px solid var(--c-primary);
+    border-left:2px solid var(--c-primary);
+  }
+
+  .btn::after{
+    right:-1px;bottom:-1px;
+    border-bottom:2px solid var(--c-secondary);
+    border-right:2px solid var(--c-secondary);
+  }
+
+  .btn:hover{
+    background:rgba(34,230,255,.18);
+    color:#fff;
+    box-shadow:0 0 18px rgba(34,230,255,.32), inset 0 0 22px rgba(34,230,255,.12);
+  }
+
+  .btn:active{
+    transform:translateY(1px);
+    background:var(--c-primary);
+    color:#02121a;
+    box-shadow:0 0 26px rgba(34,230,255,.6);
+  }
+
+  .btn:active::before{border-color:#02121a}
+  .btn:active::after{border-color:#02121a}
+
+  .btn:focus-visible{
+    outline:2px solid var(--c-amber);
+    outline-offset:4px;
+  }
+
+  .btn:disabled,
+  .btn[disabled]{
+    color:#5f7885;
+    border-color:rgba(120,150,165,.25);
+    background:rgba(255,255,255,.02);
+    cursor:not-allowed;
+    box-shadow:none;
+    transform:none;
+  }
+
+  .btn[disabled]::before,
+  .btn[disabled]::after{border-color:#3d4d57}
+
+  .btn--primary{
+    background:linear-gradient(180deg,#7cf6ff,#1ec9e4 55%,#12a2bc);
+    color:#02131a;
+    border-color:#8ff9ff;
+    box-shadow:0 0 20px rgba(34,230,255,.35);
+  }
+
+  .btn--primary::before{border-color:#02131a}
+  .btn--primary::after{border-color:var(--c-secondary)}
+
+  .btn--primary:hover{
+    background:linear-gradient(180deg,#b5fbff,#48e2f7 55%,#1cc0d9);
+    color:#001016;
+    box-shadow:0 0 30px rgba(34,230,255,.6);
+  }
+
+  .btn--secondary{
+    background:transparent;
+    border-color:rgba(255,46,110,.5);
+    color:#ffd0de;
+  }
+
+  .btn--secondary::before{border-color:var(--c-secondary)}
+  .btn--secondary::after{border-color:var(--c-primary)}
+
+  .btn--secondary:hover{
+    background:rgba(255,46,110,.16);
+    color:#fff;
+    box-shadow:0 0 18px rgba(255,46,110,.35);
+  }
+
+  .btn--icon svg{width:14px;height:14px;flex:none}
+
+  /* —— 输入框 —— */
+  .field{display:block;margin-bottom:12px}
+  .field:last-of-type{margin-bottom:0}
+
+  .field__label{
+    display:block;
+    margin-bottom:5px;
+    font-size:9.5px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--c-muted);
+  }
+
+  .input{
+    width:100%;
+    padding:9px 12px;
+    font-family:var(--font);
+    font-size:12.5px;
+    letter-spacing:.06em;
+    color:#e8fbff;
+    background:rgba(34,230,255,.04);
+    border:1px solid rgba(34,230,255,.26);
+    border-left:2px solid var(--c-primary);
+    border-radius:0;
+    transition:border-color .14s ease, box-shadow .14s ease, background .14s ease;
+  }
+
+  .input::placeholder{color:#5d7683}
+
+  .input:hover{border-color:rgba(34,230,255,.55);background:rgba(34,230,255,.07)}
+
+  .input:focus{
+    outline:2px solid var(--c-amber);
+    outline-offset:3px;
+    border-color:var(--c-primary);
+    box-shadow:0 0 20px rgba(34,230,255,.28);
+    background:rgba(34,230,255,.09);
+  }
+
+  .input[disabled]{
+    color:#61798a;
+    border-color:rgba(120,150,165,.2);
+    border-left-color:rgba(120,150,165,.35);
+    background:rgba(255,255,255,.02);
+    cursor:not-allowed;
+  }
+
+  /* —— 开关 —— */
+  .switch{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    user-select:none;
+  }
+
+  .switch input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  .switch__track{
+    position:relative;
+    width:62px;height:24px;
+    flex:none;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(34,230,255,.3);
+    transition:background .16s ease, border-color .16s ease, box-shadow .16s ease;
+  }
+
+  .switch__track::after{
+    content:"OFF";
+    position:absolute;
+    right:5px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:8px;
+    letter-spacing:.12em;
+    color:#5d7683;
+  }
+
+  .switch__knob{
+    position:absolute;
+    left:3px;top:3px;
+    width:16px;height:16px;
+    background:#5d7683;
+    transition:transform .16s ease, background .16s ease, box-shadow .16s ease;
+  }
+
+  .switch input:checked + .switch__track{
+    background:rgba(34,230,255,.16);
+    border-color:var(--c-primary);
+    box-shadow:0 0 18px rgba(34,230,255,.32);
+  }
+
+  .switch input:checked + .switch__track::after{
+    content:"ON";
+    left:5px;
+    right:auto;
+    color:var(--c-primary);
+  }
+
+  .switch input:checked + .switch__track .switch__knob{
+    transform:translateX(38px);
+    background:var(--c-primary);
+    box-shadow:0 0 14px var(--c-primary);
+  }
+
+  .switch input:focus-visible + .switch__track{
+    outline:2px solid var(--c-amber);
+    outline-offset:4px;
+  }
+
+  .switch input:disabled + .switch__track{
+    opacity:.42;
+    cursor:not-allowed;
+  }
+
+  .switch__text{font-size:11.5px;letter-spacing:.08em}
+  .switch input:disabled ~ .switch__text{color:#5d7683}
+
+  /* —— 分段控件 —— */
+  .seg{
+    display:inline-flex;
+    border:1px solid rgba(34,230,255,.32);
+    background:rgba(34,230,255,.03);
+  }
+
+  .seg input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  .seg label{
+    padding:6px 15px;
+    font-size:11px;
+    letter-spacing:.14em;
+    color:#9fc0cd;
+    border-right:1px solid rgba(34,230,255,.22);
+    cursor:pointer;
+    transition:background .12s ease, color .12s ease;
+  }
+
+  .seg label:last-of-type{border-right:0}
+
+  .seg label:hover{background:rgba(34,230,255,.12);color:#fff}
+
+  .seg input:checked + label{
+    background:rgba(34,230,255,.9);
+    color:#02121a;
+    font-weight:700;
+    box-shadow:0 0 16px rgba(34,230,255,.36) inset;
+  }
+
+  .seg input:disabled + label{
+    color:#4e6672;
+    background:rgba(255,255,255,.02);
+    text-decoration:line-through;
+    cursor:not-allowed;
+  }
+
+  .seg input:focus-visible + label{
+    outline:2px solid var(--c-amber);
+    outline-offset:-4px;
+  }
+
+  /* —— 卡片：HUD 读数 —— */
+  .card{
+    padding:13px 14px 15px;
+    background:
+      linear-gradient(180deg, rgba(34,230,255,.07), transparent 55%),
+      #061016;
+    border:1px solid rgba(34,230,255,.2);
+    border-top:2px solid var(--c-primary);
+  }
+
+  .card__kicker{
+    display:flex;
+    justify-content:space-between;
+    font-size:9px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--c-muted);
+    margin-bottom:8px;
+  }
+
+  .card__kicker b{color:var(--c-secondary);font-weight:700}
+
+  .card h3{
+    margin:0 0 6px;
+    font-size:15px;
+    letter-spacing:.08em;
+    color:#f0fdff;
+  }
+
+  .card p{
+    margin:0;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:12.5px;
+    letter-spacing:0;
+    line-height:1.7;
+    color:#a9c4d0;
+  }
+
+  .card__metric{
+    display:flex;
+    align-items:flex-end;
+    gap:10px;
+    margin-top:12px;
+    padding-top:10px;
+    border-top:1px solid var(--c-line-soft);
+  }
+
+  .card__metric strong{
+    font-size:29px;
+    line-height:1;
+    font-weight:700;
+    letter-spacing:.02em;
+    color:var(--c-primary);
+    text-shadow:0 0 18px rgba(34,230,255,.55);
+  }
+
+  .card__metric span{
+    font-size:9px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--c-muted);
+    padding-bottom:3px;
+  }
+
+  .card__bar{
+    height:5px;
+    margin-top:9px;
+    background:repeating-linear-gradient(90deg, var(--c-primary) 0 6px, transparent 6px 9px);
+    opacity:.7;
+  }
+
+  /* —— 列表 —— */
+  .list{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+
+  .list a{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:9px 11px;
+    text-decoration:none;
+    color:var(--c-text);
+    border:1px solid rgba(34,230,255,.14);
+    background:rgba(34,230,255,.03);
+    transition:border-color .14s ease, background .14s ease, box-shadow .14s ease;
+  }
+
+  .list a:hover{
+    border-color:rgba(34,230,255,.55);
+    background:rgba(34,230,255,.1);
+    box-shadow:inset 3px 0 0 var(--c-primary);
+  }
+
+  .list a:active{background:rgba(34,230,255,.2)}
+
+  .list a:focus-visible{
+    outline:2px solid var(--c-amber);
+    outline-offset:3px;
+  }
+
+  .idx{
+    flex:none;
+    font-size:9.5px;
+    letter-spacing:.1em;
+    color:var(--c-primary);
+    opacity:.65;
+  }
+
+  .list__text{flex:1;min-width:0}
+  .list__title{display:block;font-size:12px;letter-spacing:.06em;color:#e9fbff}
+  .list__meta{display:block;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--c-muted)}
+
+  .badge{
+    flex:none;
+    padding:1px 7px;
+    font-size:9px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--c-primary);
+    border:1px solid rgba(34,230,255,.45);
+    background:rgba(34,230,255,.1);
+  }
+
+  .badge--hot{color:#ff90b2;border-color:rgba(255,46,110,.5);background:rgba(255,46,110,.12)}
+
+  /* —— 提示条 —— */
+  .alert{
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+    padding:11px 13px;
+    margin-bottom:10px;
+    border:1px solid rgba(255,212,0,.4);
+    border-left:3px solid var(--c-amber);
+    background:linear-gradient(90deg, rgba(255,212,0,.12), rgba(255,212,0,.02));
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:12.5px;
+    letter-spacing:0;
+    color:#e9f4f8;
+  }
+
+  .alert__icon{
+    flex:none;
+    display:grid;
+    place-items:center;
+    width:20px;height:20px;
+    font-family:var(--font);
+    font-size:12px;
+    font-weight:700;
+    color:#1a1400;
+    background:var(--c-amber);
+  }
+
+  .alert p{margin:0}
+  .alert b{color:var(--c-amber);font-weight:700}
+
+  .toast{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 13px;
+    border:1px solid var(--c-line);
+    border-left:3px solid var(--c-primary);
+    background:rgba(5,16,22,.92);
+    font-size:11.5px;
+    letter-spacing:.06em;
+    color:#dff9ff;
+    box-shadow:0 0 22px rgba(34,230,255,.14);
+  }
+
+  .toast span{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--c-muted)}
+
+  /* ============ 底部 ============ */
+  .notes{
+    margin-top:22px;
+    padding:20px clamp(16px,3vw,24px);
+    border:1px solid var(--c-line);
+    border-top:2px solid var(--c-secondary);
+    background:linear-gradient(180deg, rgba(255,46,110,.06), rgba(4,9,13,.96));
+  }
+
+  .notes h2{
+    margin:0 0 12px;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--c-secondary);
+  }
+
+  .notes ol{
+    margin:0;
+    padding-left:18px;
+    display:grid;
+    gap:9px;
+    font-family:system-ui,-apple-system,"PingFang SC",sans-serif;
+    font-size:12.5px;
+    letter-spacing:0;
+    line-height:1.7;
+    color:#b9d2dd;
+  }
+
+  .notes li::marker{color:var(--c-primary);font-family:var(--font);font-size:11px}
+  .notes b{color:#fff;font-weight:700}
+
+  code.k{
+    font-family:var(--font);
+    font-size:11px;
+    padding:1px 4px;
+    color:#8fe9f7;
+    background:rgba(34,230,255,.08);
+    border:1px solid rgba(34,230,255,.18);
+  }
+
+  @media (max-width:780px){
+    .grid{grid-template-columns:minmax(0,1fr)}
+    .panel--wide{grid-column:auto}
+    .hero__title em{letter-spacing:.16em}
+  }
+
+  @media (min-width:781px){
+    .token:last-child{grid-column:1 / -1}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition-duration:.01ms !important;animation-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="hero">
+    <div class="hero__in">
+      <div class="hero__eyebrow">
+        <span class="chip chip--dot">STYLE 03</span>
+        <span class="chip chip--hot">CYBERPUNK HUD</span>
+        <span class="chip">SYS://UI_GALLERY</span>
+      </div>
+      <h1 class="hero__title">赛博朋克 HUD<em>Cyberpunk Heads-Up Display</em></h1>
+      <p class="hero__lede">
+        视觉机制：把界面当成军用头盔里的读数层——<b>切角面板</b>、<b>角标括号</b>、<b>等宽字距</b>与
+        <b>青/品红双色发光</b>构成全部信息层级。光只出现在边缘和数字上，正文永远是低饱和冷色，保证可读。
+      </p>
+      <div class="ticks" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <section class="tokens" aria-label="设计令牌">
+    <div class="token"><span class="token__key">主色 / Cyan</span><span class="token__val"><i class="swatch" style="background:#22e6ff;color:#22e6ff"></i><code>#22E6FF</code></span></div>
+    <div class="token"><span class="token__key">辅色 / Magenta</span><span class="token__val"><i class="swatch" style="background:#ff2e6e;color:#ff2e6e"></i><code>#FF2E6E</code></span></div>
+    <div class="token"><span class="token__key">背景 / Base</span><span class="token__val"><i class="swatch" style="background:#04070b;color:#04070b"></i><code>#04070B</code></span></div>
+    <div class="token"><span class="token__key">文字 / Text</span><span class="token__val"><i class="swatch" style="background:#d6ecf5;color:#d6ecf5"></i><code>#D6ECF5</code></span></div>
+    <div class="token"><span class="token__key">圆角 / Radius</span><span class="token__val">0px + 16px 切角</span></div>
+    <div class="token"><span class="token__key">描边与发光</span><span class="token__val">1px 线 + 0 0 18px 青</span></div>
+    <div class="token"><span class="token__key">字体策略</span><span class="token__val">mono / 字距 .14em</span></div>
+  </section>
+
+  <section class="grid">
+
+    <section class="panel">
+      <div class="panel__in">
+        <div class="panel__head"><h2>按钮</h2><span>BTN</span></div>
+        <div class="row">
+          <button class="btn btn--primary" type="button">主按钮</button>
+          <button class="btn btn--secondary" type="button">次按钮</button>
+          <button class="btn btn--icon" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M4 20h16"/></svg>
+            导出
+          </button>
+          <button class="btn" type="button" disabled>禁用态</button>
+        </div>
+        <p class="hint">hover 提亮并外发光 · active 反白为实心青 · focus-visible 琥珀色焦点框</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__in">
+        <div class="panel__head"><h2>输入框</h2><span>INPUT</span></div>
+        <label class="field">
+          <span class="field__label">Target_ID</span>
+          <input class="input" type="text" value="NODE-07 // AURORA" autocomplete="off">
+        </label>
+        <label class="field">
+          <span class="field__label">Disabled</span>
+          <input class="input" type="text" value="ACCESS DENIED" disabled>
+        </label>
+        <p class="hint">左边缘 2px 青色定位线，聚焦时整框发光并加琥珀外环</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__in">
+        <div class="panel__head"><h2>开关</h2><span>SWITCH</span></div>
+        <div class="row" style="gap:22px">
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="switch__track" aria-hidden="true"><span class="switch__knob"></span></span>
+            <span class="switch__text">链路激活</span>
+          </label>
+          <label class="switch">
+            <input type="checkbox" disabled>
+            <span class="switch__track" aria-hidden="true"><span class="switch__knob"></span></span>
+            <span class="switch__text">禁用开关</span>
+          </label>
+        </div>
+        <p class="hint">ON / OFF 文案由 <code style="font-family:var(--font)">::after</code> 随 <code style="font-family:var(--font)">:checked</code> 切换</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__in">
+        <div class="panel__head"><h2>分段控件</h2><span>SEG</span></div>
+        <div class="seg" role="group" aria-label="视图密度">
+          <input type="radio" name="density" id="d1" checked><label for="d1">紧凑</label>
+          <input type="radio" name="density" id="d2"><label for="d2">标准</label>
+          <input type="radio" name="density" id="d3"><label for="d3">宽松</label>
+          <input type="radio" name="density" id="d4" disabled><label for="d4">锁定</label>
+        </div>
+        <p class="hint">选中项用实心青底反白，模拟被点亮的硬件按键</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__in">
+        <div class="panel__head"><h2>卡片</h2><span>CARD</span></div>
+        <article class="card">
+          <div class="card__kicker"><span>READOUT // 07</span><b>LIVE</b></div>
+          <h3>目标节点</h3>
+          <p>把信息切成读数块，用角标、编号和刻度建立秩序。<br>发光只描边，不铺在文字底下。</p>
+          <div class="card__metric"><strong>98.6%</strong><span>Signal integrity</span></div>
+          <div class="card__bar" aria-hidden="true"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel__in">
+        <div class="panel__head"><h2>列表</h2><span>LIST</span></div>
+        <ul class="list">
+          <li><a href="#">
+            <span class="idx" aria-hidden="true">01</span>
+            <span class="list__text"><span class="list__title">切角面板</span><span class="list__meta">clip-path 16px</span></span>
+            <span class="badge">active</span>
+          </a></li>
+          <li><a href="#">
+            <span class="idx" aria-hidden="true">02</span>
+            <span class="list__text"><span class="list__title">角标括号</span><span class="list__meta">pseudo elements</span></span>
+            <span class="badge">css</span>
+          </a></li>
+          <li><a href="#">
+            <span class="idx" aria-hidden="true">03</span>
+            <span class="list__text"><span class="list__title">扫描线与暗角</span><span class="list__meta">multiply overlay</span></span>
+            <span class="badge badge--hot">3 layers</span>
+          </a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel panel--wide">
+      <div class="panel__in">
+        <div class="panel__head"><h2>提示</h2><span>ALERT / TOAST</span></div>
+        <div class="alert">
+          <span class="alert__icon" aria-hidden="true">!</span>
+          <p><b>离线运行：</b>无任何外链资源。切角由 <code style="font-family:var(--font)">clip-path</code> 生成，边框由 1px 渐变底衬出。</p>
+        </div>
+        <div class="toast">
+          DATA SAVED TO LOCAL NODE
+          <span>12:04:07 · OFFLINE</span>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+  <footer class="notes">
+    <h2>关键 CSS 手法</h2>
+    <ol>
+      <li><b>双层切角</b>：外层 <code class="k">padding:1px</code> 铺青色渐变，内外都套同一个 <code class="k">clip-path: polygon(...)</code>，切角处自然留下 1px 描边。</li>
+      <li><b>角标括号</b>：按钮 <code class="k">::before / ::after</code> 各画两条边（左上青、右下品红），8px 见方，比整圈边框更像仪表盘刻度。</li>
+      <li><b>可读发光</b>：<code class="k">text-shadow: 2px 0 #ff2e6e, -2px 0 #22e6ff</code> 只做 2px 色散，正文不使用大半径模糊，避免发光糊字。</li>
+      <li><b>CRT 覆盖层</b>：固定定位的 <code class="k">repeating-linear-gradient</code> 扫描线 + <code class="k">radial-gradient</code> 暗角，<code class="k">mix-blend-mode:multiply</code> 统一压暗，不遮交互。</li>
+    </ol>
+  </footer>
+
+</main>
+</body>
+</html>
