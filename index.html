@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UI 风格图鉴 · 21 种视觉语言</title>
+<title>UI 风格图鉴 · 22 种视觉语言</title>
 <style>
   :root{
     --paper:#F7F5F0;
@@ -366,12 +366,12 @@
 <header class="mast">
   <div class="mast__top">
     <span class="mono">UI Style Atlas</span>
-    <span class="mono">2026 / 21 Specimens</span>
+    <span class="mono">2026 / 22 Specimens</span>
   </div>
   <h1 class="mast__title">UI 风格图鉴</h1>
-  <p class="mast__sub"><em>Twenty-one visual languages.</em> 同一套组件，被二十一种材质、秩序与文化语境重新翻译。每张卡片是子页面的实时缩略，点击进入完整样本。</p>
+  <p class="mast__sub"><em>Twenty-two visual languages.</em> 同一套组件，被二十二种材质、秩序与文化语境重新翻译。每张卡片是子页面的实时缩略，点击进入完整样本。</p>
   <dl class="mast__meta">
-    <div><dt>样本</dt><dd>21 个</dd></div>
+    <div><dt>样本</dt><dd>22 个</dd></div>
     <div><dt>分组</dt><dd>4 组</dd></div>
     <div><dt>外部依赖</dt><dd>0</dd></div>
     <div><dt>缩略方式</dt><dd>1200 × 800 iframe</dd></div>
@@ -437,6 +437,13 @@
       colors:["#4ADE80","#A78BFA","#05070F","#EAF1FF"],
       font:"-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif",
       fontLabel:"系统 UI · 400 / 600"
+    },
+    {
+      slug:"neumorphism", zh:"新拟物", en:"Neumorphism", group:"material",
+      desc:"控件与背景同色，层次只靠一对阴影：亮侧在左上、暗侧在右下，按下时翻成 inset，从凸起变凹陷。",
+      colors:["#E6E9EF","#FFFFFF","#B4BFD0","#333D51"],
+      font:"-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC',sans-serif",
+      fontLabel:"系统 UI · 600 / 700"
     },
 
     {
@@ -562,7 +569,7 @@
   /* 占位底色取各子页面真实的 body 背景，预览未挂载时不会露出黑块 */
   var BG = {
     glassmorphism:"#080C18", claymorphism:"#F2EAE0", skeuomorphism:"#6D4826",
-    "liquid-glass":"#E8F0F7", "aurora-gradient":"#05070F",
+    "liquid-glass":"#E8F0F7", "aurora-gradient":"#05070F", neumorphism:"#E6E9EF",
     swiss:"#F3F1EA", brutalism:"#F2F0E9", "neo-brutalism":"#FFF3D6",
     memphis:"#FFF9E8", bauhaus:"#F2E9D8",
     "material-you":"#FEF7FF", "ios-fluid":"#F2F2F7", "fluent-acrylic":"#EDF3F8",
@@ -713,7 +720,7 @@
 
     shownEl.textContent = visible;
 
-    /* 重新显示后宽度从 0 恢复，重算缩放；只补挂当前视口附近的预览，避免一次挂载 21 个 iframe */
+    /* 重新显示后宽度从 0 恢复，重算缩放；只补挂当前视口附近的预览，避免一次挂载全部 iframe */
     var vh = window.innerHeight || document.documentElement.clientHeight;
     cards.forEach(function(card){
       if (card.hidden) return;

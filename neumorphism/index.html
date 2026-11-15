@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Neumorphism · CSS 组件示例</title>
+<style>
+  /* ================================================================
+     设计变量：改这一块即可整体换肤
+     新拟物的核心是「控件与背景同色，只用双侧阴影表达层次」，
+     光源固定左上 —— 亮侧阴影偏左上，暗侧阴影偏右下。
+     ================================================================ */
+  :root{
+    --bg:             #e6e9ef;   /* 底色 = 控件底色 */
+    --shadow-light:   #ffffff;   /* 亮侧（左上） */
+    --shadow-dark:    #b4bfd0;   /* 暗侧（右下） */
+
+    --text:           #333d51;
+    --text-muted:     #58657c;
+    --text-disabled:  #7a869c;
+
+    /* 新拟物阴影对比度天然偏低，键盘焦点必须另给高对比实线环 */
+    --focus:          #0b57d0;
+
+    --radius:         16px;
+    --radius-sm:      10px;
+    --space:          28px;
+    --gap:            18px;
+
+    /* 阴影配方：真实可用的数值，负值为左上、正值为右下 */
+    --raised:         -6px -6px 12px var(--shadow-light),  6px  6px 12px var(--shadow-dark);
+    --raised-hover:   -8px -8px 16px var(--shadow-light),  8px  8px 16px var(--shadow-dark);
+    --raised-sm:      -3px -3px 6px  var(--shadow-light),  3px  3px 6px  var(--shadow-dark);
+    --inset:          inset -4px -4px 8px  var(--shadow-light), inset  4px  4px 8px  var(--shadow-dark);
+    --inset-deep:     inset -6px -6px 12px var(--shadow-light), inset  6px  6px 12px var(--shadow-dark);
+  }
+
+  *, *::before, *::after{ box-sizing: border-box; }
+
+  /* ---------------- 标本页头（与图鉴统一骨架对齐） ---------------- */
+  .hero{ max-width: 760px; }
+  .eyebrow{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 18px;
+    padding: 9px 15px;
+    border-radius: 999px;
+    background: var(--bg);
+    box-shadow: var(--raised-sm);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .eyebrow::before{
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--text);
+    box-shadow: 0 1px 3px rgba(51, 61, 81, .45);
+  }
+  .hero h1{
+    margin: 0 0 16px;
+    font-size: clamp(38px, 6vw, 62px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+  }
+  .hero h1 .en{
+    display: block;
+    margin-top: 12px;
+    font-size: 0.27em;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .lede{
+    margin: 0;
+    max-width: 56ch;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text-muted);
+  }
+  .lede strong{ color: var(--text); font-weight: 600; }
+
+  /* ---------------- Token 条 ---------------- */
+  .tokens{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 40px 0 0;
+    padding: 0;
+  }
+  .token{
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 16px 10px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    box-shadow: var(--raised-sm);
+  }
+  .token .sw{
+    width: 26px;
+    height: 26px;
+    flex: none;
+    border-radius: 8px;
+    box-shadow: var(--inset);
+  }
+  .token .sw.radius{ box-shadow: var(--raised-sm); }
+  .token .sw.font{
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    box-shadow: var(--raised-sm);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .token b{
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+  }
+  .token code{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    color: var(--text);
+  }
+
+  .intro{ max-width: 62ch; margin-top: 46px; }
+  .intro kbd{
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: var(--bg);
+    box-shadow: var(--raised-sm);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  html{ -webkit-text-size-adjust: 100%; }
+
+  body{
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 80px 32px 120px;
+  }
+
+  /* ---------------- 页头 ---------------- */
+  .intro{ max-width: 62ch; }
+  .intro h1{
+    margin: 0 0 14px;
+    font-size: clamp(26px, 4vw, 34px);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .intro p{
+    margin: 0 0 10px;
+    color: var(--text-muted);
+  }
+  .intro p:last-of-type{ margin-bottom: 22px; }
+
+  .swatches{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .swatches li{ display: flex; align-items: center; gap: 9px; }
+  .swatches i{
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: var(--raised-sm);
+  }
+  .swatches code{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text);
+  }
+
+  /* ---------------- 组件栅格 ---------------- */
+  .blocks{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 88px 72px;
+    margin-top: 76px;
+  }
+
+  .block{ display: flex; flex-direction: column; }
+  .block h2{
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .block__caption{
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .block__demo{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap);
+    margin-top: 26px;
+  }
+  .block__demo--stack{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  /* ---------------- 凸起按钮 ---------------- */
+  .btn{
+    appearance: none;
+    border: 0;
+    font: inherit;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    padding: 14px 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--raised);
+    cursor: pointer;
+    transition: box-shadow .18s ease, transform .18s ease, color .18s ease;
+  }
+  .btn:hover{ box-shadow: var(--raised-hover); }
+  .btn:active,
+  .btn.is-pressed{
+    box-shadow: var(--inset-deep);
+    transform: translateY(1px) scale(.995);
+    color: var(--text-muted);
+  }
+
+  .btn--sm{
+    font-size: 14px;
+    padding: 10px 22px;
+    border-radius: 12px;
+    box-shadow: var(--raised-sm);
+  }
+  .btn--sm:hover{ box-shadow: var(--raised); }
+
+  /* 禁用态：抽掉阴影、压低文字，指针与 hover 全部失效 */
+  .btn:disabled,
+  .btn:disabled:hover{
+    box-shadow: inset 0 0 0 1px rgba(51, 61, 81, .14);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* 键盘焦点环：新拟物阴影对比度不足，统一补一圈高对比实线 */
+  .btn:focus-visible,
+  .icon-btn:focus-visible{
+    outline: 3px solid var(--focus);
+    outline-offset: 4px;
+  }
+
+  /* ---------------- 圆形图标按钮 ---------------- */
+  .icon-btn{
+    appearance: none;
+    border: 0;
+    padding: 0;
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: var(--raised);
+    cursor: pointer;
+    transition: box-shadow .16s ease, transform .16s ease;
+  }
+  .icon-btn:hover{ box-shadow: var(--raised-hover); }
+  .icon-btn:active{
+    box-shadow: var(--inset);
+    transform: scale(.94);
+  }
+  .icon-btn svg{
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ---------------- 开关 ---------------- */
+  .toggle{
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 14px;
+    color: var(--text);
+  }
+  /* 真实 checkbox 覆盖在 track 上方：可聚焦、可点击，但完全透明 */
+  .toggle input{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 56px;
+    height: 32px;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .toggle__track{
+    flex: none;
+    width: 56px;
+    height: 32px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    border-radius: 999px;
+    background: var(--bg);
+    box-shadow: var(--inset);
+    transition: box-shadow .2s ease;
+  }
+  .toggle__knob{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: var(--raised-sm);
+    transition: transform .22s ease, box-shadow .22s ease;
+  }
+  .toggle input:checked + .toggle__track .toggle__knob{
+    transform: translateX(24px);
+  }
+  .toggle input:focus-visible + .toggle__track{
+    outline: 3px solid var(--focus);
+    outline-offset: 4px;
+  }
+
+  /* ---------------- 内凹输入框 / 文本域 ---------------- */
+  .field{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  .field > label{
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .field input,
+  .field textarea{
+    width: 100%;
+    font: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    border: 0;
+    border-radius: var(--radius-sm);
+    padding: 13px 16px;
+    box-shadow: var(--inset);
+    caret-color: var(--text);
+    transition: box-shadow .18s ease;
+    resize: vertical;
+  }
+  .field input::placeholder,
+  .field textarea::placeholder{ color: #717d92; }
+  .field input:hover,
+  .field textarea:hover{ box-shadow: var(--inset-deep); }
+  .field input:focus-visible,
+  .field textarea:focus-visible{
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  /* ---------------- 滑块 ---------------- */
+  .slider-wrap{ width: 100%; max-width: 320px; }
+  .slider{
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 999px;
+  }
+  .slider:focus-visible{
+    outline: 3px solid var(--focus);
+    outline-offset: 6px;
+  }
+  .slider::-webkit-slider-runnable-track{
+    height: 12px;
+    border-radius: 999px;
+    background: var(--bg);
+    box-shadow: inset -3px -3px 6px var(--shadow-light), inset 3px 3px 6px var(--shadow-dark);
+  }
+  .slider::-webkit-slider-thumb{
+    -webkit-appearance: none;
+    width: 26px;
+    height: 26px;
+    margin-top: -7px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: -3px -3px 6px var(--shadow-light), 3px 3px 6px var(--shadow-dark);
+    transition: box-shadow .16s ease;
+  }
+  .slider:active::-webkit-slider-thumb{
+    box-shadow: inset -3px -3px 6px var(--shadow-light), inset 3px 3px 6px var(--shadow-dark);
+  }
+  .slider::-moz-range-track{
+    height: 12px;
+    border-radius: 999px;
+    background: var(--bg);
+    box-shadow: inset -3px -3px 6px var(--shadow-light), inset 3px 3px 6px var(--shadow-dark);
+  }
+  .slider::-moz-range-thumb{
+    width: 26px;
+    height: 26px;
+    border: 0;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: -3px -3px 6px var(--shadow-light), 3px 3px 6px var(--shadow-dark);
+  }
+  .slider-value{
+    font-size: 13px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------------- 分段控件 ---------------- */
+  .segmented{
+    display: inline-flex;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 999px;
+    background: var(--bg);
+    box-shadow: var(--inset);
+  }
+  .segmented label{
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+  .segmented input{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .segmented span{
+    display: block;
+    padding: 9px 24px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: box-shadow .18s ease, color .18s ease;
+  }
+  /* 选中项：从凹陷的槽里「凸」出来 */
+  .segmented input:checked + span{
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: var(--raised-sm);
+  }
+  .segmented input:focus-visible + span{
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* ---------------- 凸起卡片 ---------------- */
+  .card{
+    width: 100%;
+    max-width: 340px;
+    padding: var(--space);
+    border-radius: calc(var(--radius) + 6px);
+    background: var(--bg);
+    box-shadow: var(--raised);
+  }
+  .card h3{
+    margin: 0 0 8px;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+  .card p{
+    margin: 0 0 22px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .sr-only{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 640px){
+    .page{ padding: 56px 22px 88px; }
+    .blocks{ gap: 64px 40px; margin-top: 56px; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="hero">
+    <p class="eyebrow">UI Style 06 / 22 · 材质光影</p>
+    <h1>新拟物<span class="en">Neumorphism</span></h1>
+    <p class="lede">控件与背景同色，层次全靠一对阴影：亮侧在左上、暗侧在右下，光源固定。<strong>按压时阴影翻转为 inset</strong>，元素从「凸起」变成「凹陷」——没有边框，也没有色块。</p>
+  </header>
+
+  <section class="tokens" aria-label="设计 Token">
+    <div class="token"><span class="sw" style="background:#e6e9ef"></span><div><b>底色</b><code>#E6E9EF</code></div></div>
+    <div class="token"><span class="sw" style="background:#ffffff"></span><div><b>亮侧阴影</b><code>#FFFFFF</code></div></div>
+    <div class="token"><span class="sw" style="background:#b4bfd0"></span><div><b>暗侧阴影</b><code>#B4BFD0</code></div></div>
+    <div class="token"><span class="sw" style="background:#333d51"></span><div><b>文字</b><code>#333D51</code></div></div>
+    <div class="token"><span class="sw radius"></span><div><b>圆角</b><code>16px</code></div></div>
+    <div class="token"><span class="sw font">Aa</span><div><b>字体</b><code>系统栈 600 / 700</code></div></div>
+  </section>
+
+  <header class="intro">
+    <p>下面每个组件都标注了状态；按 <kbd>Tab</kbd> 可查看键盘焦点环——新拟物的阴影对比度天然偏低，焦点必须另给一圈高对比实线。</p>
+  </header>
+
+  <div class="blocks">
+
+    <!-- 凸起按钮 -->
+    <section class="block">
+      <h2>凸起按钮</h2>
+      <p class="block__caption">默认凸起 / hover 阴影加深抬升 / 按下变 inset 凹陷</p>
+      <div class="block__demo">
+        <button class="btn" type="button">默认凸起</button>
+        <button class="btn is-pressed" type="button">按下（inset）</button>
+      </div>
+    </section>
+
+    <!-- 圆形图标按钮 -->
+    <section class="block">
+      <h2>圆形图标按钮</h2>
+      <p class="block__caption">凸起圆形，按下时缩放 0.94 并内凹</p>
+      <div class="block__demo">
+        <button class="icon-btn" type="button" aria-label="添加">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <button class="icon-btn" type="button" aria-label="收藏">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-9.4A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 7 3.6c0 5-7 9.4-7 9.4z"/></svg>
+        </button>
+        <button class="icon-btn" type="button" aria-label="收藏星标">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l2.5 5.2 5.5.8-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.5-.8z"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- 开关 -->
+    <section class="block">
+      <h2>开关</h2>
+      <p class="block__caption">关闭态 track 内凹、滑块凸起；开启态滑块右移</p>
+      <div class="block__demo">
+        <label class="toggle">
+          <input type="checkbox" checked>
+          <span class="toggle__track"><span class="toggle__knob"></span></span>
+          <span>自动同步</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox">
+          <span class="toggle__track"><span class="toggle__knob"></span></span>
+          <span>省电模式</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- 输入框 / 文本域 -->
+    <section class="block">
+      <h2>凹陷输入框 / 文本域</h2>
+      <p class="block__caption">输入区域整体内凹，聚焦时外描高对比焦点环</p>
+      <div class="block__demo block__demo--stack">
+        <div class="field">
+          <label for="demo-name">昵称</label>
+          <input id="demo-name" type="text" placeholder="输入昵称…">
+        </div>
+        <div class="field">
+          <label for="demo-note">备注</label>
+          <textarea id="demo-note" rows="3" placeholder="补充说明…"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- 滑块 -->
+    <section class="block">
+      <h2>滑块</h2>
+      <p class="block__caption">轨道内凹、滑块凸起，拖动时滑块翻转为凹陷</p>
+      <div class="block__demo">
+        <div class="slider-wrap">
+          <input class="slider" type="range" min="0" max="100" value="62" aria-label="音量">
+          <span class="slider-value">62 / 100</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 分段控件 -->
+    <section class="block">
+      <h2>分段控件</h2>
+      <p class="block__caption">外层凹槽，选中项以凸起高亮（默认选中「周」）</p>
+      <div class="block__demo">
+        <div class="segmented" role="radiogroup" aria-label="时间范围">
+          <label>
+            <input type="radio" name="range" value="day">
+            <span>日</span>
+          </label>
+          <label>
+            <input type="radio" name="range" value="week" checked>
+            <span>周</span>
+          </label>
+          <label>
+            <input type="radio" name="range" value="month">
+            <span>月</span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 凸起卡片 -->
+    <section class="block">
+      <h2>凸起卡片</h2>
+      <p class="block__caption">大圆角凸起容器，承载内容与次级按钮</p>
+      <div class="block__demo">
+        <article class="card">
+          <h3>今日专注</h3>
+          <p>与背景同色的卡片，靠左上亮、右下暗的一对阴影产生厚度，不使用边框。</p>
+          <button class="btn btn--sm" type="button">查看详情</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- 禁用态 -->
+    <section class="block">
+      <h2>禁用态</h2>
+      <p class="block__caption">去掉立体阴影、文字压暗，指针为 not-allowed，不可聚焦</p>
+      <div class="block__demo">
+        <button class="btn" type="button" disabled>不可用按钮</button>
+      </div>
+    </section>
+
+  </div>
+</main>
+</body>
+</html>
